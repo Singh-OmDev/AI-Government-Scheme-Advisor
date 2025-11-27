@@ -3,7 +3,7 @@
 A web application that helps Indian citizens understand which government schemes they may be eligible for, what documents are required, and how to apply.
 
 ## Features
-- **AI-Powered Recommendations**: Uses Gemini 1.5 Flash to suggest relevant schemes.
+- **AI-Powered Recommendations**: Uses  Llama 3.3  to suggest relevant schemes.
 - **Simple Language**: Explains eligibility and steps in easy-to-understand English.
 - **Comprehensive Form**: Captures detailed user profile for accurate suggestions.
 - **Filtering**: Filter schemes by type (Central/State) and category.
@@ -12,7 +12,7 @@ A web application that helps Indian citizens understand which government schemes
 ## Tech Stack
 - **Frontend**: React, Vite, Tailwind CSS
 - **Backend**: Node.js, Express
-- **AI**: Google Gemini 1.5 Flash
+- **AI**: Llama 3.3 
 
 ## How to Run
 
