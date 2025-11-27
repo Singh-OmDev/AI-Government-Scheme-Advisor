@@ -1,5 +1,10 @@
 # AI Government Scheme Advisor – India
 
+live demo https://ai-government-scheme-advisor.vercel.app/
+
+
+<img width="1899" height="867" alt="image" src="https://github.com/user-attachments/assets/8eb51b1d-76c9-409b-a9ba-4a0425b6e170" />
+
 A web application that helps Indian citizens understand which government schemes they may be eligible for, what documents are required, and how to apply.
 
 ## Features
