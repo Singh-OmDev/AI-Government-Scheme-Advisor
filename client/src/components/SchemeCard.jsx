@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '@clerk/clerk-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, ExternalLink, FileText, CheckCircle, MessageSquare, Send, Share2, Gift } from 'lucide-react';
 import { chatWithScheme } from '../api';
@@ -9,6 +10,7 @@ const SchemeCard = ({ scheme, index, t, language }) => {
     const [chatInput, setChatInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
     const [isChatLoading, setIsChatLoading] = useState(false);
+    const { getToken } = useAuth();
 
     const handleShare = () => {
         const text = `Check out this government scheme: *${scheme.name}*\n\n${scheme.description}\n\nFind more at AI Government Scheme Advisor!`;
@@ -26,7 +28,8 @@ const SchemeCard = ({ scheme, index, t, language }) => {
         setIsChatLoading(true);
 
         try {
-            const data = await chatWithScheme(scheme, userMsg.content, language);
+            const token = await getToken();
+            const data = await chatWithScheme(scheme, userMsg.content, language, token);
             const aiMsg = { role: 'ai', content: data.answer };
             setChatHistory(prev => [...prev, aiMsg]);
         } catch (error) {

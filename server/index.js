@@ -10,10 +10,29 @@ const { recommendSchemes, chatWithScheme } = require('./groq');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const { clerkMiddleware, requireAuth } = require('@clerk/express');
+
 app.use(cors());
 app.use(express.json());
 
-app.post('/api/recommend-schemes', async (req, res) => {
+// Explicitly load keys to avoid auto-discovery issues
+const publishableKey = process.env.CLERK_PUBLISHABLE_KEY || process.env.VITE_CLERK_PUBLISHABLE_KEY;
+const secretKey = process.env.CLERK_SECRET_KEY || process.env.VITE_CLERK_SECRET_KEY;
+
+if (!publishableKey) {
+    console.error("❌ Error: CLERK_PUBLISHABLE_KEY is missing in .env");
+} else {
+    console.log("CLERK_PUBLISHABLE_KEY loaded (starts with):", publishableKey.substring(0, 8));
+}
+if (!secretKey) {
+    console.error("❌ Error: CLERK_SECRET_KEY is missing in .env");
+} else {
+    console.log("CLERK_SECRET_KEY loaded (starts with):", secretKey.substring(0, 8));
+}
+
+app.use(clerkMiddleware({ publishableKey, secretKey }));
+
+app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
     try {
         const userProfile = req.body;
         const language = userProfile.language || 'en';
@@ -26,7 +45,7 @@ app.post('/api/recommend-schemes', async (req, res) => {
     }
 });
 
-app.post('/api/chat-scheme', async (req, res) => {
+app.post('/api/chat-scheme', requireAuth(), async (req, res) => {
     try {
         const { scheme, question, language } = req.body;
         if (!scheme || !question) {
