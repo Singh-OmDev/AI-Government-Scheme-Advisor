@@ -145,10 +145,10 @@ function HomePage() {
                         <Disclaimer language={language} t={t} />
                     </div>
                 </div>
-            </main>
+            </main >
 
             <Footer />
-        </div>
+        </div >
     );
 }
 
