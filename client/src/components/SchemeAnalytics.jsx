@@ -2,11 +2,11 @@ import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
 const SchemeAnalytics = ({ schemes, language }) => {
-    // 1. Process Data for Central vs State (Pie Chart)
+    
     const typeCount = schemes.reduce((acc, scheme) => {
-        // Normalize type to handle potential casing differences
+        
         const type = (scheme.type || 'Unknown').toLowerCase();
-        // Map to display categories
+    
         const key = type.includes('central') ? 'Central Gov' : 'State Gov';
         acc[key] = (acc[key] || 0) + 1;
         return acc;
@@ -17,15 +17,15 @@ const SchemeAnalytics = ({ schemes, language }) => {
         value: typeCount[key]
     }));
 
-    // 2. Process Data for Categories/Tags (Bar Chart)
+
     const tagCount = schemes.reduce((acc, scheme) => {
         let tagsFound = false;
 
-        // Try using existing tags
+    
         if (scheme.tags && Array.isArray(scheme.tags) && scheme.tags.length > 0) {
             scheme.tags.forEach(tag => {
                 const cleanTag = tag.trim();
-                // Filter out generic tags that don't add value
+                
                 if (cleanTag && !['Central', 'State', 'Government', 'Scheme'].includes(cleanTag)) {
                     acc[cleanTag] = (acc[cleanTag] || 0) + 1;
                     tagsFound = true;

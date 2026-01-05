@@ -8,6 +8,7 @@ import HowItWorks from '../components/HowItWorks';
 import { recommendSchemes } from '../api';
 import { translations } from '../translations';
 import SchemeAnalytics from '../components/SchemeAnalytics';
+import AdminDashboard from '../components/AdminDashboard';
 
 function HomePage() {
     const [schemes, setSchemes] = useState([]);

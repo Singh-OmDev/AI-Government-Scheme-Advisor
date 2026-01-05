@@ -1,33 +1,35 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Languages } from 'lucide-react';
 
-const Header = ({ language, setLanguage }) => {
-    const toggleLanguage = () => {
-        setLanguage(prev => prev === 'en' ? 'hi' : 'en');
-    };
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Languages, ShieldCheck, BarChart2 } from 'lucide-react';
+
+const Header = ({ language, setLanguage, t }) => {
+    const navigate = useNavigate();
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-white/10">
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">AI</span>
+        <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-slate-900/80 backdrop-blur-md border-b border-white/10">
+            <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                <Link to="/" className="flex items-center gap-2 group">
+                    <div className="bg-blue-600/20 p-2 rounded-lg group-hover:bg-blue-600/30 transition-colors">
+                        <ShieldCheck className="w-6 h-6 text-blue-400" />
                     </div>
-                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-                        Scheme Advisor
-                    </span>
-                </div>
+                    <span className="font-bold text-xl tracking-tight">Scheme<span className="text-blue-400">Advisor</span></span>
+                </Link>
 
                 <div className="flex items-center gap-4">
+                    <Link to="/dashboard" className="hidden md:flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white transition-colors bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/5">
+                        <BarChart2 className="w-4 h-4 text-purple-400" />
+                        <span>Insights</span>
+                    </Link>
+
                     <button
-                        onClick={toggleLanguage}
+                        onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
                         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-sm font-medium text-gray-300"
                     >
                         <Languages className="w-4 h-4" />
                         {language === 'en' ? 'हिंदी' : 'English'}
                     </button>
-                
+
                 </div>
             </div>
         </header>
