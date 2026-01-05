@@ -17,9 +17,11 @@ Rules:
 3. Output STRICT JSON only.
 4. Ensure ALL keys and string values are enclosed in double quotes.
 5. Do not include any text outside the JSON object.
-6. ${isHindi ? 'Output ALL content (descriptions, names, advice, tags, eligibility, documents, steps, benefits) in HINDI language. HOWEVER, keep the value of "type" as strictly "Central" or "State" (in English) for filtering purposes. Keep JSON keys in English.' : 'Output content in English.'}
+6. ${isHindi ? 'Output ALL content in HINDI. Keep "type" as "Central" or "State" in English.' : 'Output content in English.'}
+7. ACCURACY IS CRITICAL. Do NOT invent or hallucinate scheme names. Only list real, official government schemes.
+8. If you cannot find 15 user-specific schemes, fill the remaining slots with REAL, broadly applicable Central Government schemes (e.g., Pradhan Mantri Jan Dhan Yojana, Aadhaar, etc.) to reach the count. NEVER make up a scheme.
 
-Given the following user profile, recommend UP TO 10 schemes.
+Given the following user profile, you MUST recommend EXACTLY 15 schemes. Do not output fewer than 15. If necessary, include broader Central government schemes to meet this count.
 
 Output JSON with this exact structure:
 {
@@ -53,31 +55,49 @@ Education Level: ${userProfile.educationLevel}
 Special Conditions: ${userProfile.specialConditions ? userProfile.specialConditions.join(', ') : 'None'}
 `;
 
-  try {
-    const completion = await groq.chat.completions.create({
-      messages: [
-        {
-          role: "system",
-          content: "You are a helpful AI assistant that outputs strictly valid JSON."
-        },
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      model: "llama-3.3-70b-versatile",
-      response_format: { type: "json_object" }
-    });
+  let retries = 2;
+  while (retries >= 0) {
+    try {
+      const completion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful AI assistant that outputs strictly valid JSON. Do NOT output any text, markdown, or explanations outside of the JSON object."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.1,
+        response_format: { type: "json_object" }
+      });
 
-    let jsonString = completion.choices[0]?.message?.content || "{}";
-    // Check if the response contains markdown code blocks
-    if (jsonString.includes("```")) {
-      jsonString = jsonString.replace(/```json|```/g, "").trim();
+      let jsonString = completion.choices[0]?.message?.content || "{}";
+
+      // Clean up potential markdown or extra text
+      if (jsonString.includes("```")) {
+        jsonString = jsonString.replace(/```json|```/g, "").trim();
+      }
+
+      // Attempt to parse
+      const parsed = JSON.parse(jsonString);
+
+      // Simple validation
+      if (!parsed.schemes || !Array.isArray(parsed.schemes)) {
+        throw new Error("Invalid structure: missing schemes array");
+      }
+
+      return parsed;
+
+    } catch (error) {
+      console.error(`Attempt failed (${retries} retries left):`, error.message);
+      if (retries === 0) throw error;
+      retries--;
+      // Wait a bit before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    return JSON.parse(jsonString);
-  } catch (error) {
-    console.error("Error calling Groq API:", error);
-    throw error;
   }
 }
 

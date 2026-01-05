@@ -15,6 +15,7 @@ function HomePage() {
     const [error, setError] = useState(null);
     const [showResults, setShowResults] = useState(false);
     const [language, setLanguage] = useState('en');
+    const [userProfile, setUserProfile] = useState(null);
 
     const t = translations[language];
 
@@ -23,14 +24,16 @@ function HomePage() {
         setSchemes([]);
         setGeneralAdvice([]);
         setShowResults(false);
+        setUserProfile(null);
     }, [language]);
 
-    const handleFormSubmit = async (userProfile) => {
+    const handleFormSubmit = async (formData) => {
         setIsLoading(true);
         setError(null);
         setShowResults(false);
+        setUserProfile(formData);
         try {
-            const data = await recommendSchemes({ ...userProfile, language });
+            const data = await recommendSchemes({ ...formData, language });
             if (data.schemes) {
                 setSchemes(data.schemes);
                 setGeneralAdvice(data.generalAdvice || []);
@@ -107,8 +110,32 @@ function HomePage() {
                     )}
 
                     {showResults && (
-                        <div id="results" className="scroll-mt-24">
+                        <div id="results" className="scroll-mt-24 space-y-12">
                             <ResultsSection schemes={schemes} generalAdvice={generalAdvice} language={language} t={t} />
+
+                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 text-center">
+                                <h2 className="text-2xl font-bold text-white mb-4">
+                                    {language === 'en' ? 'Where to Apply?' : 'आवेदन कहां करें?'}
+                                </h2>
+                                <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+                                    {language === 'en'
+                                        ? 'To apply for these schemes or verify your documents, please visit your nearest Common Service Center (CSC) or Government Office.'
+                                        : 'इन योजनाओं के लिए आवेदन करने या अपने दस्तावेजों को सत्यापित करने के लिए, कृपया अपने निकटतम सामान्य सेवा केंद्र (CSC) या सरकारी कार्यालय पर जाएं।'}
+                                </p>
+
+                                <a
+                                    href="https://locator.csccloud.in/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/20"
+                                >
+                                    {language === 'en' ? 'Find Official CSC Center' : 'आधिकारिक CSC केंद्र खोजें'}
+                                    <span aria-hidden="true">&rarr;</span>
+                                </a>
+                                <p className="text-xs text-gray-500 mt-4">
+                                    {language === 'en' ? 'Redirects to the official Government CSC Locator' : 'आधिकारिक सरकारी CSC लोकेटर पर पुनर्निर्देशित करता'}
+                                </p>
+                            </div>
                         </div>
                     )}
 
