@@ -12,7 +12,7 @@ A web application that helps Indian citizens understand which government schemes
 - **Simple Language**: Explains eligibility and steps in easy-to-understand English.
 - **Comprehensive Form**: Captures detailed user profile for accurate suggestions.
 - **Filtering**: Filter schemes by type (Central/State) and category.
-- **Shareable**: Copy all recommendations to share via WhatsApp/Text.
+- **Shareable**: Copy all recommendations to share via WhatsApp/Text
 
 ## Tech Stack
 - **Frontend**: React, Vite, Tailwind CSS
