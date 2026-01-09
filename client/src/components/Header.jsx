@@ -3,6 +3,8 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Languages, ShieldCheck, BarChart2, HelpCircle } from 'lucide-react';
 
+import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+
 const Header = ({ language, setLanguage, t }) => {
     const navigate = useNavigate();
 
@@ -34,10 +36,23 @@ const Header = ({ language, setLanguage, t }) => {
                         <HelpCircle className="w-4 h-4" />
                         <span className="hidden md:inline">{language === 'hi' ? 'सहायता' : 'Help'}</span>
                     </Link>
+
+                    <SignedOut>
+                        <Link
+                            to="/sign-in"
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-blue-500/20"
+                        >
+                            {language === 'hi' ? 'साइन इन' : 'Sign In'}
+                        </Link>
+                    </SignedOut>
+                    <SignedIn>
+                        <UserButton afterSignOutUrl="/" />
+                    </SignedIn>
                 </nav>
             </div>
         </header>
     );
 };
+
 
 export default Header;
