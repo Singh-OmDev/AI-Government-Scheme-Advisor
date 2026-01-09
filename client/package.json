@@ -10,6 +10,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@clerk/clerk-react": "^5.59.3",
         "@react-three/drei": "9.99.0",
         "@react-three/fiber": "8.15.16",
         "clsx": "^2.1.1",
