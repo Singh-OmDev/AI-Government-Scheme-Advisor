@@ -5,11 +5,17 @@ const path = require('path');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
+// Ensure Clerk Publishable Key is available for Backend SDK (it might look for CLERK_PUBLISHABLE_KEY)
+if (!process.env.CLERK_PUBLISHABLE_KEY && process.env.VITE_CLERK_PUBLISHABLE_KEY) {
+    process.env.CLERK_PUBLISHABLE_KEY = process.env.VITE_CLERK_PUBLISHABLE_KEY;
+}
+
 const { recommendSchemes, chatWithScheme } = require('./groq');
 
 const mongoose = require('mongoose');
 const Analytics = require('./models/Analytics');
 const History = require('./models/History');
+const SavedScheme = require('./models/SavedScheme');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -19,11 +25,20 @@ mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('✅ MongoDB Connected'))
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
+const { clerkMiddleware, requireAuth } = require('@clerk/express');
+
 app.use(cors());
 app.use(express.json());
+// Add Clerk Middleware securely
+if (process.env.CLERK_SECRET_KEY) {
+    app.use(clerkMiddleware());
+} else {
+    console.warn("⚠️ CLERK_SECRET_KEY is missing in .env. Authentication middleware skipped (Routes protected by requireAuth will fail).");
+}
 
 // Routes
 app.post('/api/recommend-schemes', async (req, res) => {
+    // ...
     try {
         const userProfile = req.body;
         console.log("-----------------------------------------");
@@ -87,8 +102,8 @@ app.post('/api/recommend-schemes', async (req, res) => {
     }
 });
 
-// New Endpoint: Get Admin Dashboard Stats
-app.get('/api/analytics', async (req, res) => {
+// New Endpoint: Get Admin Dashboard Stats (Protected)
+app.get('/api/analytics', requireAuth(), async (req, res) => {
     try {
         const totalSearches = await Analytics.countDocuments();
 
@@ -135,7 +150,80 @@ app.get('/api/history/:userId', async (req, res) => {
     }
 });
 
+// ... existing imports
+
+// --- Saved Schemes Endpoints ---
+
+// Save a Scheme
+app.post('/api/save-scheme', async (req, res) => {
+    try {
+        const { userId, schemeName, schemeData } = req.body;
+
+        if (!userId || !schemeName) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Create a simple ID from name if not provided (or use a hash)
+        const schemeId = schemeName.toLowerCase().replace(/\s+/g, '-');
+
+        const saved = await SavedScheme.create({
+            userId,
+            schemeId,
+            schemeName,
+            schemeData
+        });
+
+        res.json(saved);
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ error: "Scheme already saved" });
+        }
+        console.error("Save scheme error:", error);
+        res.status(500).json({ error: "Failed to save scheme" });
+    }
+});
+
+// Get User's Saved Schemes
+app.get('/api/saved-schemes/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const savedSchemes = await SavedScheme.find({ userId }).sort({ timestamp: -1 });
+        res.json(savedSchemes);
+    } catch (error) {
+        console.error("Fetch saved schemes error:", error);
+        res.status(500).json({ error: "Failed to fetch saved schemes" });
+    }
+});
+
+// Remove a Saved Scheme
+app.delete('/api/saved-schemes/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        await SavedScheme.findByIdAndDelete(id);
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Delete saved scheme error:", error);
+        res.status(500).json({ error: "Failed to remove scheme" });
+    }
+});
+
+// Check if scheme is saved (optional utility)
+app.get('/api/is-saved', async (req, res) => {
+    try {
+        const { userId, schemeName } = req.query;
+        if (!userId || !schemeName) return res.json({ saved: false });
+
+        const schemeId = schemeName.toLowerCase().replace(/\s+/g, '-');
+        const exists = await SavedScheme.exists({ userId, schemeId });
+        res.json({ saved: !!exists });
+    } catch (error) {
+        res.status(500).json({ error: "Check error" });
+    }
+});
+
+// ... existing chat-scheme route ...
 app.post('/api/chat-scheme', async (req, res) => {
+    // ...
     try {
         const { scheme, question, language } = req.body;
         if (!scheme || !question) {

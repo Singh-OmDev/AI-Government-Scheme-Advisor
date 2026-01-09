@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage';
 import HelpPage from './pages/HelpPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
+import SavedSchemesPage from './pages/SavedSchemesPage';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/help" element={<HelpPage />} />
+            <Route path="/saved-schemes" element={<SavedSchemesPage />} />
             <Route path="/sign-in/*" element={<SignInPage />} />
             <Route path="/sign-up/*" element={<SignUpPage />} />
         </Routes>

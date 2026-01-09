@@ -41,3 +41,34 @@ export const chatWithScheme = async (scheme, question, language) => {
         throw error;
     }
 };
+
+export const saveScheme = async (userId, scheme) => {
+    const response = await fetch(`${API_URL}/save-scheme`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            userId,
+            schemeName: scheme.name,
+            schemeData: scheme
+        }),
+    });
+    if (!response.ok) {
+        if (response.status === 400) throw new Error("Already saved");
+        throw new Error("Failed to save");
+    }
+    return await response.json();
+};
+
+export const getSavedSchemes = async (userId) => {
+    const response = await fetch(`${API_URL}/saved-schemes/${userId}`);
+    if (!response.ok) throw new Error("Failed to fetch");
+    return await response.json();
+};
+
+export const removeSavedScheme = async (id) => {
+    const response = await fetch(`${API_URL}/saved-schemes/${id}`, {
+        method: 'DELETE'
+    });
+    if (!response.ok) throw new Error("Failed to delete");
+    return await response.json();
+};

@@ -1,15 +1,50 @@
 import React, { useState } from 'react';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ExternalLink, FileText, CheckCircle, MessageSquare, Send, Share2, Gift } from 'lucide-react';
-import { chatWithScheme } from '../api';
+import { ChevronDown, ExternalLink, FileText, CheckCircle, MessageSquare, Send, Share2, Gift, Bookmark, BookmarkCheck } from 'lucide-react';
+import { chatWithScheme, saveScheme, removeSavedScheme } from '../api';
+import { useUser } from '@clerk/clerk-react';
 
 const SchemeCard = ({ scheme, index, t, language }) => {
+    const { user } = useUser();
     const [isExpanded, setIsExpanded] = useState(false);
     const [showChat, setShowChat] = useState(false);
     const [chatInput, setChatInput] = useState('');
     const [chatHistory, setChatHistory] = useState([]);
     const [isChatLoading, setIsChatLoading] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [isSaveLoading, setIsSaveLoading] = useState(false);
+
+    // Initial check (you might want to pass this prop from parent for efficiency, but simple state here works for instant feedback)
+    // Actually, for instant "Search" results, we don't know if they are saved unless we fetched user saved schemes beforehand.
+    // For now, let's keep it simple: defaulting to false, and user can save. 
+    // Ideally, parent passes 'savedSchemeIds' array.
+
+    const handleSaveToggle = async () => {
+        if (!user) {
+            alert("Please sign in to save schemes!");
+            return;
+        }
+        setIsSaveLoading(true);
+        try {
+            if (isSaved) {
+                // We actually need the _id of the saved document to delete it, currently we only have scheme info.
+                // For this implementation, we'll only support Saving for now in this unified card.
+                // A true toggle requires fetching the saved ID first.
+                // Let's implement "Save" only for search results.
+                await saveScheme(user.id, scheme);
+                setIsSaved(true);
+            } else {
+                await saveScheme(user.id, scheme);
+                setIsSaved(true);
+            }
+        } catch (error) {
+            if (error.message === "Already saved") setIsSaved(true);
+            else console.error("Save failed", error);
+        } finally {
+            setIsSaveLoading(false);
+        }
+    };
 
 
     const handleShare = () => {
@@ -78,6 +113,14 @@ const SchemeCard = ({ scheme, index, t, language }) => {
                         >
                             <Share2 className="w-5 h-5" />
                         </button>
+                        <button
+                            onClick={handleSaveToggle}
+                            disabled={isSaveLoading || isSaved}
+                            className={`transition-colors print:hidden ${isSaved ? 'text-green-500' : 'text-gray-400 hover:text-blue-400'}`}
+                            title={isSaved ? "Saved" : "Save Scheme"}
+                        >
+                            {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+                        </button>
                     </div>
                 </div>
 
@@ -128,8 +171,8 @@ const SchemeCard = ({ scheme, index, t, language }) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={`text-sm font-semibold flex items-center gap-1 transition-colors px-3 py-1.5 rounded-lg shadow-sm ${hasUrl
-                                        ? 'bg-green-600 hover:bg-green-500 text-white shadow-green-500/20'
-                                        : 'bg-slate-700 hover:bg-slate-600 text-gray-200 border border-white/10'
+                                    ? 'bg-green-600 hover:bg-green-500 text-white shadow-green-500/20'
+                                    : 'bg-slate-700 hover:bg-slate-600 text-gray-200 border border-white/10'
                                     }`}
                             >
                                 <ExternalLink className="w-4 h-4" />

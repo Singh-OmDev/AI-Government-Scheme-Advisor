@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Languages, ShieldCheck, BarChart2, HelpCircle } from 'lucide-react';
+import { Languages, ShieldCheck, BarChart2, HelpCircle, BookmarkCheck } from 'lucide-react';
 
 import { SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 
@@ -23,6 +23,13 @@ const Header = ({ language, setLanguage, t }) => {
                         <BarChart2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         <span className="font-medium text-sm">Insights</span>
                     </Link>
+
+                    <SignedIn>
+                        <Link to="/saved-schemes" className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-green-400 rounded-full border border-green-500/20 transition-all hover:shadow-[0_0_15px_rgba(16,185,129,0.3)] group">
+                            <BookmarkCheck className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span className="font-medium text-sm">Saved</span>
+                        </Link>
+                    </SignedIn>
 
                     <button
                         onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
