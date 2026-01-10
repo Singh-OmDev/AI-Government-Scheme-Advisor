@@ -30,9 +30,18 @@ export const recommendSchemes = async (userProfile, token) => {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`API Error (${response.status}):`, errorText);
-            throw new Error(`API Error: ${response.status} - ${errorText.substring(0, 100)}`);
+            let errorMessage = `API Error: ${response.status}`;
+            try {
+                const errorData = await response.json();
+                console.error("Full API Error Details:", errorData);
+                errorMessage += ` - ${errorData.details || errorData.error || JSON.stringify(errorData)}`;
+                if (errorData.stack) console.error("Server Stack Trace:", errorData.stack);
+            } catch (e) {
+                const errorText = await response.text();
+                console.error(`API Error (${response.status}) Raw Text:`, errorText);
+                errorMessage += ` - ${errorText.substring(0, 100)}`;
+            }
+            throw new Error(errorMessage);
         }
 
         return await response.json();

@@ -22,10 +22,23 @@ const app = express();
 const port = process.env.PORT || 5002;
 // const port = process.env.PORT || 5000;
 
+// Global Error Handlers to prevent crash
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error(err.name, err.message, err.stack);
+    // process.exit(1); // Keep alive for debugging
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.error(err.name, err.message, err.stack);
+    // process.exit(1);
+});
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB Connected'))
-    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+// mongoose.connect(process.env.MONGODB_URI)
+//     .then(() => console.log('✅ MongoDB Connected'))
+//     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 const { clerkMiddleware, requireAuth } = require('@clerk/express');
 
@@ -49,67 +62,89 @@ if (process.env.CLERK_SECRET_KEY) {
 // app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
 app.post('/api/recommend-schemes', async (req, res) => {
     // console.log("Auth Status: Request received at guarded endpoint.");
-    console.log("⚠️ Auth bypassed for debugging.");
+    console.log("⚠️ Auth bypassed for debugging."); // Keep debug log for now
     try {
         const userProfile = req.body;
         console.log("-----------------------------------------");
         console.log("Received profile for recommendation:", JSON.stringify(userProfile, null, 2));
 
         const language = userProfile.language || 'en';
-        const recommendations = await recommendSchemes(userProfile, language);
-        console.log("Recommendations generated successfully");
+
+        // 1. Critical Step: Get Recommendations (Independent of DB)
+        let recommendations;
+        try {
+            recommendations = await recommendSchemes(userProfile, language);
+            console.log("Recommendations generated successfully");
+        } catch (groqError) {
+            console.error("Critical: Groq API failed:", groqError);
+            return res.status(500).json({ error: "Failed to generate recommendations", details: groqError.message });
+        }
 
         const schemeNames = recommendations.schemes ? recommendations.schemes.map(s => s.name) : [];
 
-        // --- Save Analytics Background Task (Fire & Forget) ---
-        try {
-            await Analytics.create({
-                profile: {
-                    state: userProfile.state,
-                    age: userProfile.age,
-                    occupation: userProfile.occupation,
-                    income: userProfile.annualIncome,
-                    category: userProfile.category,
-                    gender: userProfile.gender
-                },
-                schemesFound: schemeNames.length,
-                topSchemes: schemeNames.slice(0, 5) // Save top 5
-            });
-            console.log("📊 Analytics saved.");
-        } catch (analyticsErr) {
-            console.error("⚠️ Analytics save failed:", analyticsErr.message);
-        }
+        // Check DB Connection State
+        // const isDbConnected = mongoose.connection.readyState === 1;
+        const isDbConnected = false; // EMERGENCY DISABLE
 
-        // --- Save User History (if userId provided) ---
-        if (userProfile.userId) {
-            try {
-                await History.create({
-                    userId: userProfile.userId,
-                    profile: {
-                        state: userProfile.state,
-                        age: userProfile.age,
-                        occupation: userProfile.occupation,
-                        income: userProfile.annualIncome,
-                        category: userProfile.category
-                    },
-                    schemesFound: schemeNames.length,
-                    topSchemes: schemeNames.slice(0, 5)
-                });
-                console.log(`📜 History saved for user ${userProfile.userId}`);
-            } catch (histErr) {
-                console.error("⚠️ History save failed:", histErr.message);
+        if (!isDbConnected) {
+            console.warn("⚠️ MongoDB not connected. Skipping Analytics/History save to prevent crash.");
+        } else {
+            // 2. Non-Critical Step: Save Analytics (Fire & Forget)
+            (async () => {
+                try {
+                    await Analytics.create({
+                        profile: {
+                            state: userProfile.state,
+                            age: userProfile.age,
+                            occupation: userProfile.occupation,
+                            income: userProfile.annualIncome,
+                            category: userProfile.category,
+                            gender: userProfile.gender
+                        },
+                        schemesFound: schemeNames.length,
+                        topSchemes: schemeNames.slice(0, 5)
+                    });
+                    console.log("📊 Analytics saved.");
+                } catch (analyticsErr) {
+                    console.error("⚠️ Analytics save failed:", analyticsErr.message);
+                }
+            })();
+
+            // 3. Non-Critical Step: Save User History
+            if (userProfile.userId) {
+                (async () => {
+                    try {
+                        await History.create({
+                            userId: userProfile.userId,
+                            profile: {
+                                state: userProfile.state,
+                                age: userProfile.age,
+                                occupation: userProfile.occupation,
+                                income: userProfile.annualIncome,
+                                category: userProfile.category
+                            },
+                            schemesFound: schemeNames.length,
+                            topSchemes: schemeNames.slice(0, 5)
+                        });
+                        console.log(`📜 History saved for user ${userProfile.userId}`);
+                    } catch (histErr) {
+                        console.error("⚠️ History save failed:", histErr.message);
+                    }
+                })();
             }
         }
-        // -------------------------------------------------------
 
         res.json(recommendations);
     } catch (error) {
-        console.error("Error processing request in /api/recommend-schemes:");
+        console.error("Unexpected error in /api/recommend-schemes:");
         console.error(error);
-        if (error.response) {
-            console.error("API Response Data:", error.response.data);
-        }
-        res.status(500).json({ error: "Internal Server Error", details: error.message });
+        // TEMPORARY DEBUGGING: Expose stack trace to client
+        res.status(500).json({
+            error: "Internal Server Error",
+            details: error.message,
+            stack: error.stack,
+            location: "server/index.js catch block"
+        });
     }
 });
 

@@ -61,19 +61,26 @@ function HomePage() {
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden text-gray-100 font-sans selection:bg-blue-500/30">
-            {/* Background Gradients */}
-            <div className="fixed inset-0 -z-20 bg-[#0f172a]"></div>
-            <div className="fixed top-0 left-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] -z-10"></div>
-            <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px] -z-10"></div>
+        <div className="min-h-screen relative font-sans selection:bg-purple-500/30">
+            {/* Background Blobs */}
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+                <div className="blob w-[500px] h-[500px] rounded-full bg-purple-600/20 top-[-10%] left-[-10%] mix-blend-screen"></div>
+                <div className="blob w-[600px] h-[600px] rounded-full bg-blue-600/20 bottom-[-10%] right-[-10%] mix-blend-screen animation-delay-2000"></div>
+                <div className="blob w-[300px] h-[300px] rounded-full bg-pink-600/20 top-[40%] left-[40%] mix-blend-screen animation-delay-4000"></div>
+            </div>
 
             <Header language={language} setLanguage={setLanguage} />
 
-            <main className="container mx-auto px-4 py-8 relative z-10 mt-16">
+            <main className="container mx-auto px-4 py-8 relative z-10 mt-20">
 
-                <div className="max-w-4xl mx-auto space-y-16">
-                    <div className="text-center space-y-6 pt-10">
-                        <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                <div className="max-w-5xl mx-auto space-y-20">
+                    <div className="text-center space-y-8 pt-10">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full border border-purple-500/30 bg-purple-900/20 backdrop-blur-sm text-xs font-medium text-purple-300 mb-4">
+                            <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
+                            AI-Powered Government Intelligence
+                        </div>
+
+                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]">
                             {language === 'en' ? (
                                 <>
                                     Discover Government <br />
@@ -86,24 +93,22 @@ function HomePage() {
                                 </>
                             )}
                         </h1>
-                        <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                        <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
                             {t.subtitle}
                         </p>
 
-                        <div className="flex justify-center gap-8 pt-4">
-                            <div className="flex flex-col items-center">
-                                <span className="text-2xl font-bold text-white">10k+</span>
-                                <span className="text-xs text-gray-400">{t.citizensHelped}</span>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 max-w-3xl mx-auto">
+                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
+                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">10k+</span>
+                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.citizensHelped}</span>
                             </div>
-                            <div className="w-px h-10 bg-white/10"></div>
-                            <div className="flex flex-col items-center">
-                                <span className="text-2xl font-bold text-white">500+</span>
-                                <span className="text-xs text-gray-400">{t.schemesIndexed}</span>
+                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
+                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">500+</span>
+                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.schemesIndexed}</span>
                             </div>
-                            <div className="w-px h-10 bg-white/10"></div>
-                            <div className="flex flex-col items-center">
-                                <span className="text-2xl font-bold text-white">24/7</span>
-                                <span className="text-xs text-gray-400">{t.aiSupport}</span>
+                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
+                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">24/7</span>
+                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.aiSupport}</span>
                             </div>
                         </div>
                     </div>

@@ -1,19 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #0f172a;
+    font-family: var(--font-body);
+    background-color: #030712;
+    /* Gray 950/Black */
     color: #f8fafc;
     overflow-x: hidden;
 }
@@ -24,73 +23,83 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-display);
 }
 
+/* Glassmorphism Utilities */
 .glass-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-card {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    background: rgba(30, 41, 59, 0.4);
+    /* Slate 800 with opacity */
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Gradients */
 .gradient-text {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #60a5fa 0%, #a855f7 50%, #ec4899 100%);
+    /* Blue to Purple to Pink */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
+.gradient-bg {
+    background: linear-gradient(135deg, #1e3a8a 0%, #581c87 100%);
+}
+
 /* Custom Scrollbar */
-.custom-scrollbar::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 8px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+::-webkit-scrollbar-track {
+    background: #0f172a;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+::-webkit-scrollbar-thumb {
+    background: #334155;
     border-radius: 4px;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
 }
 
-/* Animation utilities */
-.fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
+/* Animation Utilities */
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+    animation: pulse-slow 8s infinite ease-in-out;
 }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.6;
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
     }
 }
 
-/* Autofill fix */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #1e293b inset !important;
+    -webkit-box-shadow: 0 0 0 30px #0f172a inset !important;
     -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
 }
 
 @media print {
@@ -102,34 +111,12 @@ input:-webkit-autofill:active {
     .glass-panel,
     .glass-card {
         background: none;
-        border: none;
-        box-shadow: none;
-        backdrop-filter: none;
+        border: 1px solid #ccc;
+        color: black;
     }
 
     header,
-    footer,
-    form,
-    .fixed,
-    .absolute,
-    button {
-        display: none !important;
-    }
-
-    #results {
-        display: block !important;
-        margin-top: 0;
-    }
-
-    .print\:block {
-        display: block !important;
-    }
-
-    .print\:hidden {
-        display: none !important;
-    }
-
-    .print\:text-black {
-        color: black !important;
+    footer {
+        display: none;
     }
 }
