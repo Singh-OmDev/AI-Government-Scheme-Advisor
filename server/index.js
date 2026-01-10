@@ -37,7 +37,17 @@ if (process.env.CLERK_SECRET_KEY) {
 }
 
 // Routes
-app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
+app.get('/api/debug-config', (req, res) => {
+    res.json({
+        clerkSecretKeySet: !!process.env.CLERK_SECRET_KEY,
+        clerkPublishableKeySet: !!process.env.CLERK_PUBLISHABLE_KEY,
+        mongoUriSet: !!process.env.MONGODB_URI,
+        port: process.env.PORT,
+        nodeEnv: process.env.NODE_ENV
+    });
+});
+// app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
+app.post('/api/recommend-schemes', async (req, res) => {
     console.log("Auth Status: Request received at guarded endpoint.");
     // ...
     try {
