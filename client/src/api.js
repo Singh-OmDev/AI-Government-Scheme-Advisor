@@ -1,10 +1,11 @@
-export const API_URL = '/api';
-// export const API_URL = 'https://ai-government-scheme-advisor.onrender.com/api';
+export const API_URL = import.meta.env.VITE_API_URL || '/api';
+// export const API_URL = 'http://localhost:5002/api';
 
 export const recommendSchemes = async (userProfile, token) => {
     try {
-        console.log("Fetching URL:", `${API_URL}/recommend-schemes`);
-        const response = await fetch(`${API_URL}/recommend-schemes`, {
+        const url = `${API_URL}/recommend-schemes`;
+        console.log("Fetching URL:", url);
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

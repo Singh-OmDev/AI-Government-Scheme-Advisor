@@ -160,10 +160,15 @@ async function searchSchemes(query, language = 'en') {
           "name": "Scheme Name",
           "type": "Central or State",
           "state": "State Name",
+          "categoryTags": ["Tag1", "Tag2"],
           "description": "Brief description",
-          "benefits": ["Benefit 1", "Benefit 2"],
           "eligibilitySummary": ["Criteria 1"],
-          "application_url": "URL or 'N/A'"
+          "requiredDocuments": ["Doc 1", "Doc 2"],
+          "applicationSteps": ["Step 1", "Step 2"],
+          "benefits": ["Benefit 1", "Benefit 2"],
+          "application_url": "URL or 'N/A'",
+          "deadline": "YYYY-MM-DD or 'Open' or 'N/A'",
+          "usefulnessScore": 90
         }
       ]
     }

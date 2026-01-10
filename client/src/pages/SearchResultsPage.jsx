@@ -5,11 +5,15 @@ import { useAuth } from "@clerk/clerk-react";
 import { searchSchemes } from '../api';
 import { ChevronLeft, Search, Loader2 } from 'lucide-react';
 import SchemeCard from '../components/SchemeCard';
+import { translations } from '../translations';
 
 const SearchResultsPage = ({ language }) => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const query = queryParams.get('q');
+
+    // Get translations
+    const t = translations[language] || translations['en'];
 
     const { getToken, isLoaded, isSignedIn } = useAuth();
 
@@ -49,7 +53,7 @@ const SearchResultsPage = ({ language }) => {
         );
     }
 
-    // Redirect if not signed in (optional, handled by protected routes usually, but good for safety)
+    // Redirect if not signed in
     if (!isSignedIn) {
         return (
             <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white p-4 text-center">
@@ -90,7 +94,7 @@ const SearchResultsPage = ({ language }) => {
                 ) : results.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {results.map((scheme, index) => (
-                            <SchemeCard key={index} scheme={scheme} language={language} />
+                            <SchemeCard key={index} scheme={scheme} language={language} t={t} />
                         ))}
                     </div>
                 ) : (

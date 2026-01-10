@@ -18,7 +18,8 @@ const History = require('./models/History');
 const SavedScheme = require('./models/SavedScheme');
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5002; // Default to 5002 locally to avoid conflict
+// const port = process.env.PORT || 5000;
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -29,6 +30,13 @@ const { clerkMiddleware, requireAuth } = require('@clerk/express');
 
 app.use(cors());
 app.use(express.json());
+
+// Debug Logger
+app.use((req, res, next) => {
+    console.log(`[Request] ${req.method} ${req.path}`);
+    next();
+});
+
 // Add Clerk Middleware securely
 if (process.env.CLERK_SECRET_KEY) {
     app.use(clerkMiddleware());
@@ -38,6 +46,7 @@ if (process.env.CLERK_SECRET_KEY) {
 
 // Routes
 app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
+    // app.post('/api/recommend-schemes', async (req, res) => {
     console.log("Auth Status: Request received at guarded endpoint.");
     // ...
     try {
@@ -261,6 +270,10 @@ app.post('/api/chat-scheme', async (req, res) => {
     }
 });
 
+app.get('/api/verify-server', (req, res) => {
+    res.json({ message: "Verification Successful", port: port });
+});
+
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port} - TIMESTAMP: ${new Date().toISOString()}`);
 });
