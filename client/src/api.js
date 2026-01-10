@@ -1,11 +1,13 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+export const API_URL = import.meta.env.VITE_API_URL || '/api';
 
-export const recommendSchemes = async (userProfile) => {
+export const recommendSchemes = async (userProfile, token) => {
     try {
+        console.log("Fetching URL:", `${API_URL}/recommend-schemes`);
         const response = await fetch(`${API_URL}/recommend-schemes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(userProfile),
         });

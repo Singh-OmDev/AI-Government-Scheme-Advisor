@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, Loader2, ChevronDown, Check } from 'lucide-react';
+import { useUser, useClerk } from '@clerk/clerk-react';
 
 const states = [
     "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
@@ -76,6 +77,8 @@ const CustomSelect = ({ label, name, value, options, onChange, placeholder }) =>
 };
 
 const InputForm = ({ onSubmit, isLoading, t }) => {
+    const { isSignedIn } = useUser();
+    const { openSignIn } = useClerk();
     const [formData, setFormData] = useState({
         name: '',
         age: '',
@@ -96,6 +99,12 @@ const InputForm = ({ onSubmit, isLoading, t }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (!isSignedIn) {
+            openSignIn();
+            return;
+        }
+
         onSubmit(formData);
     };
 
@@ -109,7 +118,7 @@ const InputForm = ({ onSubmit, isLoading, t }) => {
             transition={{ duration: 0.5, ease: "easeOut" }}
             className="glass-panel rounded-3xl p-8 md:p-10 w-full max-w-3xl mx-auto shadow-2xl shadow-blue-900/10 border border-white/10 relative"
         >
-        
+
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
 
             <div className="text-center mb-8">

@@ -37,7 +37,8 @@ if (process.env.CLERK_SECRET_KEY) {
 }
 
 // Routes
-app.post('/api/recommend-schemes', async (req, res) => {
+app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
+    console.log("Auth Status: Request received at guarded endpoint.");
     // ...
     try {
         const userProfile = req.body;
