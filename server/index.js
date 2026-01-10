@@ -103,6 +103,27 @@ app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
     }
 });
 
+const { searchSchemes } = require('./groq');
+
+// New Endpoint: Search Schemes by Keyword
+app.post('/api/search-schemes', requireAuth(), async (req, res) => {
+    try {
+        const { query, language } = req.body;
+        if (!query) return res.status(400).json({ error: "Query is required" });
+
+        console.log(`🔍 Searching for: ${query}`);
+        const results = await searchSchemes(query, language || 'en');
+
+        // Log search in analytics (optional, simplified)
+        // await Analytics.create({ searchTerm: query, ... }); 
+
+        res.json(results);
+    } catch (error) {
+        console.error("Search Endpoint Error:", error);
+        res.status(500).json({ error: "Search failed" });
+    }
+});
+
 // New Endpoint: Get Admin Dashboard Stats (Protected)
 app.get('/api/analytics', requireAuth(), async (req, res) => {
     try {

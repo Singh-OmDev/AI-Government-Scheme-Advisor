@@ -1,5 +1,5 @@
-// export const API_URL = import.meta.env.VITE_API_URL || '/api';
-export const API_URL = 'https://ai-government-scheme-advisor.onrender.com/api';
+export const API_URL = import.meta.env.VITE_API_URL || '/api';
+// export const API_URL = 'https://ai-government-scheme-advisor.onrender.com/api';
 
 export const recommendSchemes = async (userProfile, token) => {
     try {
@@ -45,7 +45,30 @@ export const chatWithScheme = async (scheme, question, language) => {
     }
 };
 
-export const saveScheme = async (userId, scheme) => {
+export const searchSchemes = async (query, language, token) => {
+    try {
+        const response = await fetch(`${API_URL}/search-schemes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ query, language }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to search schemes');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Search Schemes API Error:", error);
+        throw error;
+    }
+};
+
+export const saveScheme = async (userId, scheme, token) => {
     const response = await fetch(`${API_URL}/save-scheme`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

@@ -139,4 +139,57 @@ async function chatWithScheme(schemeDetails, userQuestion, language) {
   }
 }
 
-module.exports = { recommendSchemes, chatWithScheme };
+async function searchSchemes(query, language = 'en') {
+  const isHindi = language === 'hi';
+
+  const prompt = `
+    You are an expert government scheme advisor for India.
+    User is searching for schemes related to: "${query}"
+
+    Task:
+    1. Identify the most relevant Central and State government schemes for this keyword.
+    2. Return a list of up to 10 schemes.
+    3. Output STRICT JSON format as defined below.
+    4. ${isHindi ? 'Output mostly in HINDI, but keep keys in English.' : 'Output in English.'}
+    5. Be accurate. Do not hallucinate schemes.
+    
+    JSON Structure:
+    {
+      "schemes": [
+        {
+          "name": "Scheme Name",
+          "type": "Central or State",
+          "state": "State Name",
+          "description": "Brief description",
+          "benefits": ["Benefit 1", "Benefit 2"],
+          "eligibilitySummary": ["Criteria 1"],
+          "application_url": "URL or 'N/A'"
+        }
+      ]
+    }
+  `;
+
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: "system", content: "You are a helpful assistant that outputs strictly valid JSON." },
+        { role: "user", content: prompt }
+      ],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.1,
+      response_format: { type: "json_object" }
+    });
+
+    let jsonString = completion.choices[0]?.message?.content || "{}";
+    if (jsonString.includes("```")) {
+      jsonString = jsonString.replace(/```json|```/g, "").trim();
+    }
+    return JSON.parse(jsonString);
+
+  } catch (error) {
+    console.error("Search API Error:", error);
+    throw new Error("Failed to fetch search results");
+  }
+}
+
+module.exports = { recommendSchemes, chatWithScheme, searchSchemes };
