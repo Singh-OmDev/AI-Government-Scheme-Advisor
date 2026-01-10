@@ -18,7 +18,8 @@ const History = require('./models/History');
 const SavedScheme = require('./models/SavedScheme');
 
 const app = express();
-const port = process.env.PORT || 5002; // Default to 5002 locally to avoid conflict
+const port = 5002; // Hardcoded to match Vite Proxy
+// const port = process.env.PORT || 5002;
 // const port = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -45,10 +46,10 @@ if (process.env.CLERK_SECRET_KEY) {
 }
 
 // Routes
-app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
-    // app.post('/api/recommend-schemes', async (req, res) => {
-    console.log("Auth Status: Request received at guarded endpoint.");
-    // ...
+// app.post('/api/recommend-schemes', requireAuth(), async (req, res) => {
+app.post('/api/recommend-schemes', async (req, res) => {
+    // console.log("Auth Status: Request received at guarded endpoint.");
+    console.log("⚠️ Auth bypassed for debugging.");
     try {
         const userProfile = req.body;
         console.log("-----------------------------------------");
@@ -274,6 +275,8 @@ app.get('/api/verify-server', (req, res) => {
     res.json({ message: "Verification Successful", port: port });
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port} - TIMESTAMP: ${new Date().toISOString()}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port} (0.0.0.0) - TIMESTAMP: ${new Date().toISOString()}`);
+    console.log(`🔒 Clerk Secret Key: ${process.env.CLERK_SECRET_KEY ? '✅ Loaded' : '❌ MISSING'}`);
+    console.log(`🔑 Groq API Key: ${process.env.GROQ_API_KEY ? '✅ Loaded' : '❌ MISSING'}`);
 });
