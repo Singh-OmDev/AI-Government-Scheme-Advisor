@@ -37,5 +37,3 @@ A web application that helps Indian citizens understand which government schemes
     ```
 5.  **Open Browser**: Visit `http://localhost:5173`.
 
-## Disclaimer
-This tool is for **informational purposes only**. Always verify details from official government portals. This is not legal or financial advice.
