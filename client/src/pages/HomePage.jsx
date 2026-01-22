@@ -13,7 +13,7 @@ import TrustSection from '../components/TrustSection';
 import { useUser, useAuth } from '@clerk/clerk-react';
 
 function HomePage() {
-    const { user } = useUser();
+    const { user, isSignedIn } = useUser();
     const { getToken } = useAuth();
 
     // Initialize state from sessionStorage if available
@@ -139,7 +139,27 @@ function HomePage() {
                     <TrustSection language={language} t={t} />
 
                     <div className="relative z-20">
-                        <InputForm onSubmit={handleFormSubmit} isLoading={isLoading} language={language} t={t} />
+                        {isSignedIn ? (
+                            <InputForm onSubmit={handleFormSubmit} isLoading={isLoading} language={language} t={t} />
+                        ) : (
+                            <div className="max-w-xl mx-auto text-center p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <h3 className="text-2xl font-bold text-white mb-4">
+                                    {language === 'en' ? 'Sign in to Find Schemes' : 'योजनाएं खोजने के लिए साइन इन करें'}
+                                </h3>
+                                <p className="text-slate-300 mb-8">
+                                    {language === 'en'
+                                        ? 'Create an account or sign in to get personalized scheme recommendations tailored to your profile.'
+                                        : 'अपनी प्रोफाइल के अनुसार व्यक्तिगत योजना सिफारिशें प्राप्त करने के लिए खाता बनाएं या साइन इन करें।'}
+                                </p>
+                                <a
+                                    href="/sign-in"
+                                    className="inline-flex items-center px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all shadow-lg shadow-purple-500/20"
+                                >
+                                    {language === 'en' ? 'Sign In to Continue' : 'जारी रखने के लिए साइन इन करें'}
+                                    <span className="ml-2">→</span>
+                                </a>
+                            </div>
+                        )}
                     </div>
 
                     {error && (
