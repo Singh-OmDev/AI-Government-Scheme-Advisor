@@ -26,7 +26,6 @@
 -   **Framework**: React (Vite)
 -   **Styling**: Tailwind CSS, Framer Motion (Animations)
 -   **Icons**: Lucide React
--   **3D Elements**: Three.js, React Three Fiber
 -   **Authentication**: Clerk SDK
 
 ### Backend
