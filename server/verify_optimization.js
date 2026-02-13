@@ -39,10 +39,24 @@ const req = http.request(options, (res) => {
                 const json = JSON.parse(body);
                 if (json.schemes) {
                     console.log(`Received ${json.schemes.length} schemes.`);
-                    if (json.schemes.length === 5) {
-                        console.log("✅ SUCCESS: Received exactly 5 schemes.");
+                    if (json.schemes.length >= 8) {
+                        const hasSukanya = json.schemes.some(s => s.name.toLowerCase().includes("sukanya"));
+                        const hasOfficialUrl = json.schemes.some(s => s.application_url && (s.application_url.includes(".gov.in") || s.application_url.includes(".nic.in")));
+
+                        if (hasSukanya) {
+                            console.log("❌ FAILURE: Found 'Sukanya Samriddhi Yojana' for a Male user!");
+                            process.exit(1);
+                        } else if (!hasOfficialUrl) {
+                            console.log("❌ WARNING: No official (.gov.in/.nic.in) URLs found in results. Verification needs improvement.");
+                            // Not failing strictly, but warning
+                            process.exit(0);
+                        } else {
+                            console.log("✅ SUCCESS: Received " + json.schemes.length + " schemes (Target: 8-15), NO Sukanya, and found OFFICIAL URLs.");
+                            process.exit(0);
+                        }
                     } else {
-                        console.log(`❌ WARNING: Expected 5 schemes, got ${json.schemes.length}.`);
+                        console.log(`❌ WARNING: Expected >= 8 schemes, got ${json.schemes.length}.`);
+                        process.exit(1);
                     }
                 } else {
                     console.log("❌ ERROR: No schemes array in response.");
