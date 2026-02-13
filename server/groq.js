@@ -25,19 +25,20 @@ async function recommendSchemes(userProfile, language = 'en') {
     Special Conditions: ${userProfile.specialConditions ? userProfile.specialConditions.join(', ') : 'None'}
 
     Task:
-    1. Identify highly relevant government schemes (Central & State) for this user. Aim for 10-15 schemes, but prioritize RELEVANCE over quantity.
-    2. ELIGIBILITY CHECKS (CRITICAL):
+    1. Identify highly relevant government schemes (Central & State) for this user. Aim for 10-15 schemes.
+    2. PRIORITY: You must prioritize **State-specific schemes** for '${userProfile.state}'. Aim for at least 40-50% schemes from this state if possible.
+    3. ELIGIBILITY CHECKS (CRITICAL):
        - GENDER: If 'Male', EXCLUDE schemes for 'Women/Girls' (e.g., Sukanya Samriddhi, Ladli Behna).
        - AGE: Ensure the user's age (${userProfile.age}) falls within the scheme's limits.
        - INCOME: If income is 'High' or exceeds limits, EXCLUDE BPL/EWS specific schemes.
        - CATEGORY: If 'General', EXCLUDE schemes reserved for SC/ST/OBC.
        - OCCUPATION: Prioritize schemes matching '${userProfile.occupation}'.
-    3. Do NOT force the list to 15 if there are not enough relevant schemes. However, ensure at least 8-10 strong recommendations including broad Central schemes if specific ones are scarce.
-    4. Output STRICT JSON only.
+    4. Do NOT force the list to 15 if there are not enough relevant schemes, but try to find valid State schemes first before filling with broad Central schemes.
+    5. Output STRICT JSON only.
     
     JSON Structure:
     {
-      "schemeNames": ["Scheme 1", "Scheme 2", ...],
+      "schemeNames": ["State Scheme 1", "State Scheme 2", "Central Scheme 1", ...],
       "generalAdvice": ["Advice 1", "Advice 2"]
     }
   `;
