@@ -9,53 +9,53 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 async function recommendSchemes(userProfile, language = 'en') {
   const isHindi = language === 'hi';
   const prompt = `
-You are an assistant that helps Indian citizens discover relevant government schemes based on their profile. You are NOT a legal advisor and you must always ask users to verify details on official government portals or with authorities. You will receive a user’s basic profile (state, age, income, category, occupation, etc.) and you must output likely relevant scheme categories and example schemes.
+    You are an assistant that helps Indian citizens discover relevant government schemes based on their profile. You are NOT a legal advisor and you must always ask users to verify details on official government portals or with authorities. You will receive a user’s basic profile (state, age, income, category, occupation, etc.) and you must output likely relevant scheme categories and example schemes.
 
-Rules:
-1. Be India-specific.
-2. Focus on common types of Central and State schemes.
-3. Output STRICT JSON only.
-4. Ensure ALL keys and string values are enclosed in double quotes.
-5. Do not include any text outside the JSON object.
-6. ${isHindi ? 'Output ALL content in HINDI. Keep "type" as "Central" or "State" in English.' : 'Output content in English.'}
-7. ACCURACY IS CRITICAL. Do NOT invent or hallucinate scheme names. Only list real, official government schemes.
-8. If you cannot find 15 user-specific schemes, fill the remaining slots with REAL, broadly applicable Central Government schemes (e.g., Pradhan Mantri Jan Dhan Yojana, Aadhaar, etc.) to reach the count. NEVER make up a scheme.
+    Rules:
+    1. Be India-specific.
+    2. Focus on common types of Central and State schemes.
+    3. Output STRICT JSON only.
+    4. Ensure ALL keys and string values are enclosed in double quotes.
+    5. Do not include any text outside the JSON object.
+    6. ${isHindi ? 'Output ALL content in HINDI. Keep "type" as "Central" or "State" in English.' : 'Output content in English.'}
+    7. ACCURACY IS CRITICAL. Do NOT invent or hallucinate scheme names. Only list real, official government schemes.
+    8. If you cannot find 5 user-specific schemes, fill the remaining slots with REAL, broadly applicable Central Government schemes (e.g., Pradhan Mantri Jan Dhan Yojana, Aadhaar, etc.) to reach the count. NEVER make up a scheme.
 
-Given the following user profile, you MUST recommend EXACTLY 15 schemes. Do not output fewer than 15. If necessary, include broader Central government schemes to meet this count.
+    Given the following user profile, you MUST recommend EXACTLY 5 schemes. Do not output fewer than 5. If necessary, include broader Central government schemes to meet this count.
 
-Output JSON with this exact structure:
-{
-  "schemes": [
+    Output JSON with this exact structure:
     {
-      "name": "Scheme Name",
-      "type": "Central or State",
-      "state": "State Name or All States",
-      "categoryTags": ["Tag1", "Tag2"],
-      "description": "Brief description",
-      "eligibilitySummary": ["Criteria 1", "Criteria 2"],
-      "requiredDocuments": ["Doc 1", "Doc 2"],
-      "applicationSteps": ["Step 1", "Step 2"],
-      "benefits": ["Benefit 1", "Benefit 2"],
-      "application_url": "https://official-website-link.gov.in or 'N/A'",
-      "deadline": "YYYY-MM-DD or 'Open' or 'N/A'",
-      "usefulnessScore": 85
+      "schemes": [
+        {
+          "name": "Scheme Name",
+          "type": "Central or State",
+          "state": "State Name or All States",
+          "categoryTags": ["Tag1", "Tag2"],
+          "description": "Brief description",
+          "eligibilitySummary": ["Criteria 1", "Criteria 2"],
+          "requiredDocuments": ["Doc 1", "Doc 2"],
+          "applicationSteps": ["Step 1", "Step 2"],
+          "benefits": ["Benefit 1", "Benefit 2"],
+          "application_url": "https://official-website-link.gov.in or 'N/A'",
+          "deadline": "YYYY-MM-DD or 'Open' or 'N/A'",
+          "usefulnessScore": 85
+        }
+      ],
+      "generalAdvice": ["Advice 1", "Advice 2"]
     }
-  ],
-  "generalAdvice": ["Advice 1", "Advice 2"]
-}
 
-User Profile:
-Name: ${userProfile.name || 'N/A'}
-Age: ${userProfile.age}
-Gender: ${userProfile.gender}
-State: ${userProfile.state}
-City: ${userProfile.city}
-Annual Income: ${userProfile.annualIncome}
-Category: ${userProfile.category}
-Occupation: ${userProfile.occupation}
-Education Level: ${userProfile.educationLevel}
-Special Conditions: ${userProfile.specialConditions ? userProfile.specialConditions.join(', ') : 'None'}
-`;
+    User Profile:
+    Name: ${userProfile.name || 'N/A'}
+    Age: ${userProfile.age}
+    Gender: ${userProfile.gender}
+    State: ${userProfile.state}
+    City: ${userProfile.city}
+    Annual Income: ${userProfile.annualIncome}
+    Category: ${userProfile.category}
+    Occupation: ${userProfile.occupation}
+    Education Level: ${userProfile.educationLevel}
+    Special Conditions: ${userProfile.specialConditions ? userProfile.specialConditions.join(', ') : 'None'}
+  `;
 
   let retries = 2;
   while (retries >= 0) {
