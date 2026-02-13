@@ -151,7 +151,7 @@ async function recommendSchemes(userProfile, language = 'en') {
           { role: "system", content: systemPrompt },
           { role: "user", content: detailPrompt }
         ],
-        model: "llama-3.3-70b-versatile",
+        model: "llama-3.1-8b-instant",
         temperature: 0.1,
         response_format: { type: "json_object" }
       });
@@ -215,7 +215,7 @@ async function chatWithScheme(schemeDetails, userQuestion, language) {
         { role: "system", content: "You are a helpful assistant." },
         { role: "user", content: prompt }
       ],
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant",
       temperature: 0.5,
       max_tokens: 150,
     });
@@ -268,7 +268,7 @@ async function searchSchemes(query, language = 'en') {
         { role: "system", content: "You are a helpful assistant that outputs strictly valid JSON." },
         { role: "user", content: prompt }
       ],
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant",
       temperature: 0.1,
       response_format: { type: "json_object" }
     });
