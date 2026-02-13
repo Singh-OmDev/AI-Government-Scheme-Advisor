@@ -6,8 +6,32 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+const cache = new Map();
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 Hours
+
 async function recommendSchemes(userProfile, language = 'en') {
   const isHindi = language === 'hi';
+
+  // Clean profile for cache key
+  const cacheKey = JSON.stringify({
+    state: userProfile.state,
+    age: userProfile.age,
+    gender: userProfile.gender,
+    income: userProfile.annualIncome,
+    category: userProfile.category,
+    occupation: userProfile.occupation,
+    lang: language
+  });
+
+  if (cache.has(cacheKey)) {
+    const { timestamp, data } = cache.get(cacheKey);
+    if (Date.now() - timestamp < CACHE_TTL) {
+      console.log("⚡ Serving from Cache");
+      return data;
+    }
+    cache.delete(cacheKey);
+  }
+
   const systemPrompt = "You are a helpful AI assistant that outputs strictly valid JSON. Do NOT output any text, markdown, or explanations outside of the JSON object.";
 
   // Step 1: Get List of Scheme Names (Fast)
@@ -50,7 +74,7 @@ async function recommendSchemes(userProfile, language = 'en') {
         { role: "system", content: systemPrompt },
         { role: "user", content: namePrompt }
       ],
-      model: "llama-3.3-70b-versatile",
+      model: "llama-3.1-8b-instant", // Optimised for speed
       temperature: 0.1,
       response_format: { type: "json_object" }
     });
@@ -105,7 +129,7 @@ async function recommendSchemes(userProfile, language = 'en') {
 
   const detailPromises = batches.map(async (batchNames) => {
     const detailPrompt = `
-      You are a government scheme expert.
+      You are a government scheme advisor.
       User Profile: [Age: ${userProfile.age}, Gender: ${userProfile.gender}, State: ${userProfile.state}, Category: ${userProfile.category}, Income: ${userProfile.annualIncome}]
       Language: ${isHindi ? 'HINDI' : 'English'}
 
@@ -146,10 +170,25 @@ async function recommendSchemes(userProfile, language = 'en') {
   const results = await Promise.all(detailPromises);
   const allSchemes = results.flat();
 
-  return {
+  console.log(`Step 2 Complete. Generated ${allSchemes.length} detailed schemes.`);
+
+  if (allSchemes.length === 0) {
+    console.warn("⚠️ Step 2 produced 0 schemes (Rate Limit?). Using Fallback Schemes.");
+    return {
+      schemes: require('./constants/fallbackSchemes').FALLBACK_SCHEMES,
+      generalAdvice: ["We are experiencing high traffic. Here are some popular schemes for everyone."]
+    };
+  }
+
+  const responseData = {
     schemes: allSchemes,
     generalAdvice: generalAdvice
   };
+
+  // Cache the result
+  cache.set(cacheKey, { timestamp: Date.now(), data: responseData });
+
+  return responseData;
 }
 
 async function chatWithScheme(schemeDetails, userQuestion, language) {
