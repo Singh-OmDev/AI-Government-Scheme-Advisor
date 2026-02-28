@@ -1,24 +1,26 @@
+"use client";
+
 import React, { useState } from 'react';
 import SchemeCard from './SchemeCard';
 import { motion } from 'framer-motion';
 import { Filter, Copy, Check, Download } from 'lucide-react';
 
-const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
+const ResultsSection = ({ schemes, generalAdvice, t, language }: any) => {
     const [filter, setFilter] = useState('All');
     const [copied, setCopied] = useState(false);
 
-    const filteredSchemes = schemes.filter(scheme => {
+    const filteredSchemes = schemes.filter((scheme: any) => {
         if (filter === 'All') return true;
         if (filter === 'Central') return scheme.type === 'Central';
         if (filter === 'State') return scheme.type === 'State';
-        return scheme.categoryTags.includes(filter);
+        return scheme.categoryTags?.includes(filter);
     });
 
     // Extract unique categories for filter buttons
-    const categories = ['All', 'Central', 'State', ...new Set(schemes.flatMap(s => s.categoryTags))].slice(0, 8);
+    const categories = ['All', 'Central', 'State', ...new Set(schemes.flatMap((s: any) => s.categoryTags || []))].slice(0, 8) as string[];
 
     const handleCopy = () => {
-        const text = schemes.map(s => `${s.name} (${s.type}): ${s.description}`).join('\n\n');
+        const text = schemes.map((s: any) => `${s.name} (${s.type}): ${s.description}`).join('\n\n');
         navigator.clipboard.writeText(text);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -44,9 +46,9 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                 <motion.h2
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="text-3xl font-display font-bold text-white uppercase tracking-tight flex items-center gap-2"
+                    className="text-2xl font-bold text-white flex items-center gap-2"
                 >
-                    {t.recommendedSchemes} <span className="text-xl font-normal text-neutral-600 ml-2 mono-text tracking-widest">({schemes.length})</span>
+                    {t.recommendedSchemes} <span className="text-lg font-normal text-slate-400 ml-2">({schemes.length})</span>
                 </motion.h2>
 
                 <div className="flex gap-3">
@@ -56,7 +58,7 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handlePrint}
-                        className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white bg-[#0a0a0a] hover:bg-[#121212] px-4 py-2 border border-[#262626] rounded-md transition-colors uppercase tracking-widest mono-text"
+                        className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors border border-white/5"
                     >
                         <Download className="w-4 h-4" />
                         {t.print}
@@ -68,9 +70,9 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleCopy}
-                        className="flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white bg-[#0a0a0a] hover:bg-[#121212] px-4 py-2 border border-[#262626] rounded-md transition-colors uppercase tracking-widest mono-text"
+                        className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors border border-white/5"
                     >
-                        {copied ? <Check className="w-4 h-4 text-[#f97316]" /> : <Copy className="w-4 h-4" />}
+                        {copied ? <Check className="w-4 h-4 text-brand-400" /> : <Copy className="w-4 h-4" />}
                         {copied ? t.copied : t.copyAll}
                     </motion.button>
                 </div>
@@ -89,17 +91,17 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                 transition={{ delay: 0.2 }}
                 className="flex flex-wrap gap-2 print:hidden"
             >
-                <div className="flex items-center gap-2 text-neutral-500 mr-2 uppercase tracking-widest mono-text font-bold text-[10px]">
+                <div className="flex items-center gap-2 text-slate-400 mr-2">
                     <Filter className="w-4 h-4" />
-                    <span>{t.filter}</span>
+                    <span className="text-sm">{t.filter}</span>
                 </div>
                 {categories.map(cat => (
                     <button
                         key={cat}
                         onClick={() => setFilter(cat)}
-                        className={`px-4 py-2 text-[10px] font-bold uppercase tracking-widest mono-text transition-all border ${filter === cat
-                            ? 'bg-[#f97316] text-black border-[#f97316] shadow-lg shadow-[#f97316]/20'
-                            : 'bg-[#0a0a0a] text-neutral-400 border-[#262626] hover:bg-[#121212] hover:text-white hover:border-[#404040]'
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${filter === cat
+                            ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/25 scale-105'
+                            : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white border border-white/5'
                             }`}
                     >
                         {cat}
@@ -114,7 +116,7 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                 animate="show"
                 className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start print:grid-cols-1 print:gap-4"
             >
-                {filteredSchemes.map((scheme, index) => (
+                {filteredSchemes.map((scheme: any, index: number) => (
                     <SchemeCard key={index} scheme={scheme} index={index} t={t} language={language} />
                 ))}
             </motion.div>
@@ -125,15 +127,13 @@ const ResultsSection = ({ schemes, generalAdvice, t, language }) => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="bg-[#0a0a0a] p-8 border-l-4 border-[#f97316] border-y border-r border-[#262626] print:bg-white print:border-gray-300 print:text-black relative overflow-hidden"
+                    className="glass-panel rounded-xl p-6 mt-8 border-l-4 border-accent-gold print:bg-white print:border-gray-300 print:text-black"
                 >
-                    <h3 className="text-lg font-display font-bold text-white mb-4 uppercase tracking-wide print:text-black">
-                        <span className="text-[#f97316] mr-2">/</span> {t.advisorNotes}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white mb-4 print:text-black">💡 {t.advisorNotes}</h3>
                     <ul className="space-y-2">
-                        {generalAdvice.map((tip, index) => (
-                            <li key={index} className="text-neutral-300 text-sm flex gap-3 print:text-gray-700">
-                                <span className="text-[#f97316] font-bold mono-text print:text-black">&gt;</span> {tip}
+                        {generalAdvice.map((tip: string, index: number) => (
+                            <li key={index} className="text-slate-300 text-sm flex gap-2 print:text-gray-700">
+                                <span className="text-accent-gold print:text-black">•</span> {tip}
                             </li>
                         ))}
                     </ul>

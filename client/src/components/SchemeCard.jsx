@@ -84,7 +84,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
-            className="bg-slate-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-blue-500/50 transition-colors group print:break-inside-avoid print:bg-white print:border-gray-300 print:text-black"
+            className="bg-[#0a0a0a] rounded-xl overflow-hidden border border-[#262626] hover:border-[#f97316]/50 shadow-xl transition-all group print:break-inside-avoid print:bg-white print:border-gray-300 print:text-black"
         >
             <div className="p-5">
                 <div className="flex justify-between items-start mb-3">
@@ -95,7 +95,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                             }`}>
                             {scheme.type === 'Central' ? t.central : t.state}
                         </span>
-                        <h3 className="text-lg font-semibold text-white mt-2 leading-tight group-hover:text-blue-400 transition-colors print:text-black">
+                        <h3 className="text-xl font-display font-bold text-white mt-3 leading-tight group-hover:text-[#f97316] transition-colors print:text-black uppercase tracking-wide">
                             {scheme.name}
                         </h3>
                     </div>
@@ -107,7 +107,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                                         ⏳ {scheme.deadline === 'Open' ? (language === 'hi' ? 'खुला है' : 'Open') : scheme.deadline}
                                     </div>
                                 )}
-                            <div className="flex items-center gap-1 text-xs text-blue-300 bg-blue-500/10 px-2 py-1 rounded-md border border-blue-500/20 print:text-blue-600 print:border-blue-600">
+                            <div className="flex items-center gap-1 text-xs text-[#f97316] bg-[#f97316]/10 px-2 py-1 rounded-md border border-[#f97316]/20 print:text-[#f97316] font-mono tracking-wider uppercase">
                                 <span className="font-bold">{scheme.usefulnessScore}%</span> {t.match}
                             </div>
                         </div>
@@ -122,7 +122,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                             whileTap={{ scale: 0.85 }}
                             onClick={handleSaveToggle}
                             disabled={isSaveLoading || isSaved}
-                            className={`transition-colors print:hidden relative ${isSaved ? 'text-green-500' : 'text-gray-400 hover:text-blue-400'}`}
+                            className={`transition-colors print:hidden relative ${isSaved ? 'text-[#f97316]' : 'text-neutral-500 hover:text-[#f97316]'}`}
                             title={isSaved ? "Saved" : "Save Scheme"}
                         >
                             <motion.div
@@ -139,20 +139,20 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
 
                 <div className="flex flex-wrap gap-2 mb-4">
                     {scheme.categoryTags.map((tag, idx) => (
-                        <span key={idx} className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded border border-white/5 print:text-gray-600 print:border-gray-400">
+                        <span key={idx} className="text-[10px] uppercase tracking-widest font-bold text-neutral-400 bg-[#050505] px-2 py-1 rounded border border-[#262626] print:text-gray-600 print:border-gray-400">
                             {tag}
                         </span>
                     ))}
                 </div>
 
-                <p className="text-sm text-gray-300 mb-4 line-clamp-2 print:text-gray-700">
+                <p className="text-sm text-neutral-400 mb-6 line-clamp-2 print:text-gray-700 leading-relaxed">
                     {scheme.description}
                 </p>
 
                 <div className="flex gap-4 print:hidden">
                     <button
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 transition-colors"
+                        className="text-xs text-neutral-400 hover:text-white font-bold flex items-center gap-1 transition-colors uppercase tracking-widest mono-text"
                     >
                         {isExpanded ? t.showLess : t.viewDetails}
                         <motion.div
@@ -165,7 +165,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
 
                     <button
                         onClick={() => setShowChat(!showChat)}
-                        className={`text-sm font-medium flex items-center gap-1 transition-colors ${showChat ? 'text-purple-400' : 'text-gray-400 hover:text-purple-400'}`}
+                        className={`text-xs font-bold flex items-center gap-1 transition-colors uppercase tracking-widest mono-text ${showChat ? 'text-[#f97316]' : 'text-neutral-400 hover:text-[#f97316]'}`}
                     >
                         <MessageSquare className="w-4 h-4" />
                         {t.askAI}
@@ -213,10 +213,10 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        className="bg-slate-900/50 border-t border-white/5 print:hidden"
+                        className="bg-[#050505] border-t border-[#262626] print:hidden"
                     >
                         <div className="p-4 space-y-4">
-                            <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider">{t.chatTitle}</h4>
+                            <h4 className="text-[10px] font-bold text-[#f97316] uppercase tracking-widest mono-text">{t.chatTitle}</h4>
 
                             <div className="space-y-3 max-h-48 overflow-y-auto custom-scrollbar">
                                 {chatHistory.length === 0 && (
@@ -224,9 +224,9 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                                 )}
                                 {chatHistory.map((msg, i) => (
                                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${msg.role === 'user'
-                                            ? 'bg-blue-600 text-white'
-                                            : 'bg-slate-700 text-gray-200'
+                                        <div className={`max-w-[85%] rounded-lg px-4 py-3 text-sm leading-relaxed ${msg.role === 'user'
+                                            ? 'bg-[#262626] text-white border border-[#404040]'
+                                            : 'bg-[#0a0a0a] text-neutral-300 border border-[#262626]'
                                             }`}>
                                             {msg.content}
                                         </div>
@@ -234,7 +234,7 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                                 ))}
                                 {isChatLoading && (
                                     <div className="flex justify-start">
-                                        <div className="bg-slate-700 rounded-lg px-3 py-2">
+                                        <div className="bg-[#0a0a0a] border border-[#262626] rounded-lg px-4 py-3">
                                             <div className="flex gap-1">
                                                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
                                                 <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-100"></span>
@@ -251,12 +251,12 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                                     value={chatInput}
                                     onChange={(e) => setChatInput(e.target.value)}
                                     placeholder={t.typeQuestion}
-                                    className="flex-1 bg-slate-800 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500/50"
+                                    className="flex-1 bg-[#0a0a0a] border border-[#262626] rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#f97316] focus:ring-1 focus:ring-[#f97316]/30 mono-text placeholder-neutral-600"
                                 />
                                 <button
                                     type="submit"
                                     disabled={!chatInput.trim() || isChatLoading}
-                                    className="bg-purple-600 hover:bg-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-colors"
+                                    className="bg-[#f97316] hover:bg-[#ff8a3d] disabled:opacity-50 disabled:cursor-not-allowed text-black p-3 rounded-lg transition-colors border border-[#f97316]"
                                 >
                                     <Send className="w-4 h-4" />
                                 </button>
@@ -276,68 +276,94 @@ const SchemeCard = ({ scheme, index, t, language, initialSavedState = false, onR
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="overflow-hidden"
                         >
-                            <div className="bg-slate-900/30 border-t border-white/5 p-6 space-y-6 print:bg-transparent print:border-gray-300 print:text-black">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-white/10 transition-colors">
-                                        <h4 className="font-semibold text-white text-base flex items-center gap-2 mb-3 print:text-black">
-                                            <CheckCircle className="w-5 h-5 text-green-400 print:text-green-600" /> {t.eligibility}
-                                        </h4>
-                                        <ul className="space-y-2 ml-1">
-                                            {scheme.eligibilitySummary.map((item, i) => (
-                                                <li key={i} className="flex items-start gap-2 text-slate-200 text-sm">
-                                                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full mt-1.5 flex-shrink-0"></span>
-                                                    <span>{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
+                            <div className="bg-[#050505] border-t border-[#262626] p-6 space-y-0 print:bg-transparent print:border-gray-300 print:text-black relative">
+                                {/* Vertical Timeline Line */}
+                                <div className="absolute left-8 top-10 bottom-10 w-px bg-[#262626] hidden md:block"></div>
 
-                                    {scheme.benefits && scheme.benefits.length > 0 && (
-                                        <div className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-white/10 transition-colors">
-                                            <h4 className="font-semibold text-white text-base flex items-center gap-2 mb-3 print:text-black">
-                                                <Gift className="w-5 h-5 text-pink-400 print:text-pink-600" /> {t.benefits}
+                                <div className="flex flex-col gap-8 relative z-10">
+                                    {/* Eligibility */}
+                                    <div className="flex flex-col md:flex-row gap-4 md:gap-8 group items-start md:items-center">
+                                        <div className="md:w-1/3 flex-shrink-0">
+                                            <h4 className="font-bold text-white text-[10px] uppercase tracking-widest mono-text flex items-center gap-3 print:text-black">
+                                                <span className="w-6 h-6 rounded bg-[#0a0a0a] border border-[#262626] flex items-center justify-center text-[#f97316] group-hover:border-[#f97316]/50 transition-colors">1</span>
+                                                {t.eligibility}
                                             </h4>
-                                            <ul className="space-y-2 ml-1">
-                                                {scheme.benefits.map((benefit, i) => (
-                                                    <li key={i} className="flex items-start gap-2 text-slate-200 text-sm">
-                                                        <span className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-1.5 flex-shrink-0"></span>
-                                                        <span>{benefit}</span>
+                                        </div>
+                                        <div className="md:w-2/3 bg-[#0a0a0a] rounded-xl p-5 border border-[#262626] hover:border-[#404040] transition-colors">
+                                            <ul className="space-y-3">
+                                                {scheme.eligibilitySummary.map((item, i) => (
+                                                    <li key={i} className="flex items-start gap-3 text-white font-medium text-sm">
+                                                        <span className="text-[#f97316] mono-text mt-0.5">&gt;</span>
+                                                        <span>{item}</span>
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
-                                    )}
-                                </div>
+                                    </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-white/10 transition-colors">
-                                        <h4 className="font-semibold text-white text-base flex items-center gap-2 mb-3 print:text-black">
-                                            <FileText className="w-5 h-5 text-purple-400 print:text-purple-600" /> {t.documents}
-                                        </h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {scheme.requiredDocuments.map((doc, i) => (
-                                                <span key={i} className="bg-slate-800 text-slate-200 px-3 py-1.5 rounded-lg text-sm border border-white/10 print:text-gray-700 print:border-gray-400">
-                                                    {doc}
-                                                </span>
-                                            ))}
+                                    {/* Benefits */}
+                                    {scheme.benefits && scheme.benefits.length > 0 && (
+                                        <div className="flex flex-col md:flex-row gap-4 md:gap-8 group items-start md:items-center">
+                                            <div className="md:w-1/3 flex-shrink-0">
+                                                <h4 className="font-bold text-white text-[10px] uppercase tracking-widest mono-text flex items-center gap-3 print:text-black">
+                                                    <span className="w-6 h-6 rounded bg-[#0a0a0a] border border-[#262626] flex items-center justify-center text-[#f97316] group-hover:border-[#f97316]/50 transition-colors">2</span>
+                                                    {t.benefits}
+                                                </h4>
+                                            </div>
+                                            <div className="md:w-2/3 bg-[#0a0a0a] rounded-xl p-5 border border-[#262626] hover:border-[#404040] transition-colors">
+                                                <ul className="space-y-3">
+                                                    {scheme.benefits.map((benefit, i) => (
+                                                        <li key={i} className="flex items-start gap-3 text-white font-medium text-sm">
+                                                            <span className="text-[#f97316] mono-text mt-0.5">&gt;</span>
+                                                            <span>{benefit}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Documents */}
+                                    <div className="flex flex-col md:flex-row gap-4 md:gap-8 group items-start md:items-center">
+                                        <div className="md:w-1/3 flex-shrink-0">
+                                            <h4 className="font-bold text-white text-[10px] uppercase tracking-widest mono-text flex items-center gap-3 print:text-black">
+                                                <span className="w-6 h-6 rounded bg-[#0a0a0a] border border-[#262626] flex items-center justify-center text-[#f97316] group-hover:border-[#f97316]/50 transition-colors">3</span>
+                                                {t.documents}
+                                            </h4>
+                                        </div>
+                                        <div className="md:w-2/3 bg-[#0a0a0a] rounded-xl p-5 border border-[#262626] hover:border-[#404040] transition-colors">
+                                            <div className="flex flex-wrap gap-2">
+                                                {scheme.requiredDocuments.map((doc, i) => (
+                                                    <span key={i} className="bg-[#050505] text-white font-medium px-3 py-1.5 rounded-lg text-xs mono-text uppercase border border-[#262626] print:text-gray-700 print:border-gray-400">
+                                                        {doc}
+                                                    </span>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-white/5 rounded-xl p-4 border border-white/5 hover:border-white/10 transition-colors">
-                                        <h4 className="font-semibold text-white text-base flex items-center gap-2 mb-3 print:text-black">
-                                            <ExternalLink className="w-5 h-5 text-blue-400 print:text-blue-600" /> {t.steps}
-                                        </h4>
-                                        <ol className="space-y-2 ml-1">
-                                            {scheme.applicationSteps.map((step, i) => (
-                                                <li key={i} className="flex items-start gap-3 text-slate-200 text-sm">
-                                                    <span className="flex-shrink-0 w-5 h-5 bg-blue-500/20 text-blue-400 rounded-full flex items-center justify-center text-xs font-bold border border-blue-500/30">
-                                                        {i + 1}
-                                                    </span>
-                                                    <span>{step}</span>
-                                                </li>
-                                            ))}
-                                        </ol>
+                                    {/* Application Steps */}
+                                    <div className="flex flex-col md:flex-row gap-4 md:gap-8 group items-start md:items-center">
+                                        <div className="md:w-1/3 flex-shrink-0">
+                                            <h4 className="font-bold text-white text-[10px] uppercase tracking-widest mono-text flex items-center gap-3 print:text-black">
+                                                <span className="w-6 h-6 rounded bg-[#0a0a0a] border border-[#262626] flex items-center justify-center text-[#f97316] group-hover:border-[#f97316]/50 transition-colors">4</span>
+                                                {t.steps}
+                                            </h4>
+                                        </div>
+                                        <div className="md:w-2/3 bg-[#0a0a0a] rounded-xl p-5 border border-[#262626] hover:border-[#404040] transition-colors">
+                                            <ol className="space-y-4">
+                                                {scheme.applicationSteps.map((step, i) => (
+                                                    <li key={i} className="flex items-start gap-4 text-white font-medium text-sm">
+                                                        <span className="flex-shrink-0 w-6 h-6 bg-[#262626] text-white rounded flex items-center justify-center text-[10px] font-bold border border-[#404040] mono-text">
+                                                            {i + 1}
+                                                        </span>
+                                                        <span className="mt-0.5">{step}</span>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                         </motion.div>

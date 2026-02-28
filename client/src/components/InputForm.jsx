@@ -42,7 +42,7 @@ const CustomSelect = ({ label, name, value, options, onChange, placeholder }) =>
             <label className="block text-sm font-medium text-slate-300 mb-1.5 ml-1">{label}</label>
             <div
                 onClick={() => setIsOpen(!isOpen)}
-                className={`w-full bg-slate-800 border ${isOpen ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-slate-700'} rounded-xl px-4 py-3.5 text-white cursor-pointer flex justify-between items-center transition-all hover:border-slate-600`}
+                className={`w-full bg-[#0a0a0a] border ${isOpen ? 'border-[#f97316] ring-1 ring-[#f97316]/30' : 'border-[#262626]'} rounded-xl px-4 py-3.5 text-white cursor-pointer flex justify-between items-center transition-all hover:border-[#404040]`}
             >
                 <span className={value ? 'text-white' : 'text-slate-500'}>
                     {value || placeholder}
@@ -57,16 +57,16 @@ const CustomSelect = ({ label, name, value, options, onChange, placeholder }) =>
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-xl max-h-60 overflow-y-auto custom-scrollbar"
+                        className="absolute z-50 w-full mt-2 bg-[#0a0a0a] border border-[#262626] rounded-xl shadow-2xl max-h-60 overflow-y-auto custom-scrollbar"
                     >
                         {options.map((option) => (
                             <div
                                 key={option}
                                 onClick={() => handleSelect(option)}
-                                className="px-4 py-3 hover:bg-slate-700 cursor-pointer flex justify-between items-center text-sm text-slate-200 hover:text-white transition-colors"
+                                className="px-4 py-3 hover:bg-[#121212] cursor-pointer flex justify-between items-center text-sm text-neutral-400 hover:text-white transition-colors"
                             >
                                 {option}
-                                {value === option && <Check className="w-4 h-4 text-blue-500" />}
+                                {value === option && <Check className="w-4 h-4 text-[#f97316]" />}
                             </div>
                         ))}
                     </motion.div>
@@ -108,22 +108,22 @@ const InputForm = ({ onSubmit, isLoading, t }) => {
         onSubmit(formData);
     };
 
-    const inputClasses = "w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all hover:border-slate-600";
-    const labelClasses = "block text-sm font-medium text-slate-300 mb-1.5 ml-1";
+    const inputClasses = "w-full bg-[#0a0a0a] border border-[#262626] rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 focus:outline-none focus:border-[#f97316] focus:ring-1 focus:ring-[#f97316]/30 transition-all hover:border-[#404040]";
+    const labelClasses = "block text-xs font-semibold text-neutral-400 mb-1.5 ml-1 uppercase tracking-widest mono-text";
 
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
-            className="glass-panel rounded-3xl p-8 md:p-10 w-full max-w-3xl mx-auto shadow-2xl shadow-blue-900/10 border border-white/10 relative"
+            className="matte-panel rounded-3xl p-8 md:p-10 w-full max-w-3xl mx-auto border border-[#262626] relative z-10"
         >
 
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10 translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#f97316]/5 rounded-full blur-[80px] -z-10 translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
 
             <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">{t.findSchemes}</h2>
-                <p className="text-slate-400">{t.enterDetails}</p>
+                <h2 className="text-3xl font-display font-bold text-white mb-2 uppercase tracking-tight">{t.findSchemes}</h2>
+                <p className="text-neutral-500 mono-text text-xs uppercase tracking-widest">{t.enterDetails}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -215,7 +215,7 @@ const InputForm = ({ onSubmit, isLoading, t }) => {
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all mt-8"
+                    className="w-full bg-[#f97316] hover:bg-[#ff8a3d] text-black font-bold py-4 rounded-xl shadow-lg shadow-[#f97316]/20 flex items-center justify-center gap-2 transition-all mt-8 uppercase tracking-widest"
                 >
                     {isLoading ? (
                         <>

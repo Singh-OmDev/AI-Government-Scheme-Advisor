@@ -1,9 +1,11 @@
+"use client";
+
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 
-const SchemeAnalytics = ({ schemes, language }) => {
+const SchemeAnalytics = ({ schemes, language }: any) => {
 
-    const typeCount = schemes.reduce((acc, scheme) => {
+    const typeCount = schemes.reduce((acc: any, scheme: any) => {
 
         const type = (scheme.type || 'Unknown').toLowerCase();
 
@@ -18,12 +20,12 @@ const SchemeAnalytics = ({ schemes, language }) => {
     }));
 
 
-    const tagCount = schemes.reduce((acc, scheme) => {
+    const tagCount = schemes.reduce((acc: any, scheme: any) => {
         let tagsFound = false;
 
 
         if (scheme.tags && Array.isArray(scheme.tags) && scheme.tags.length > 0) {
-            scheme.tags.forEach(tag => {
+            scheme.tags.forEach((tag: string) => {
                 const cleanTag = tag.trim();
 
                 if (cleanTag && !['Central', 'State', 'Government', 'Scheme'].includes(cleanTag)) {
@@ -54,12 +56,12 @@ const SchemeAnalytics = ({ schemes, language }) => {
 
     const barData = Object.entries(tagCount)
         .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value) // Sort descending
+        .sort((a: any, b: any) => b.value - a.value) // Sort descending
         .slice(0, 5); // Take top 5
 
     // Colors
-    const COLORS = ['#f97316', '#ffffff', '#a3a3a3', '#525252'];
-    const BAR_COLOR = '#f97316';
+    const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+    const BAR_COLOR = '#8b5cf6';
 
     const isHindi = language !== 'en';
 
@@ -67,9 +69,9 @@ const SchemeAnalytics = ({ schemes, language }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
 
             {/* Chart 1: Distribution */}
-            <div className="bg-[#0a0a0a] border border-[#262626] rounded-xl p-6 shadow-xl hover:border-[#404040] transition-colors">
-                <h3 className="text-sm font-bold text-white mb-6 uppercase tracking-widest mono-text flex items-center gap-2">
-                    <span className="text-[#f97316]">&gt;</span> {isHindi ? 'योजना वितरण (Scheme Distribution)' : 'Scheme Distribution'}
+            <div className="bg-slate-800/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4 border-b border-white/5 pb-2">
+                    {isHindi ? 'योजना वितरण (Scheme Distribution)' : 'Scheme Distribution'}
                 </h3>
                 <div className="h-[250px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -88,19 +90,19 @@ const SchemeAnalytics = ({ schemes, language }) => {
                                 ))}
                             </Pie>
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#121212', border: '1px solid #262626', borderRadius: '8px', color: '#fff' }}
-                                itemStyle={{ color: '#E2E8F0', fontFamily: 'monospace' }}
+                                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
+                                itemStyle={{ color: '#E2E8F0' }}
                             />
-                            <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '12px', fontFamily: 'monospace', textTransform: 'uppercase' }} />
+                            <Legend verticalAlign="bottom" height={36} iconType="circle" />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
             {/* Chart 2: Top Focus Areas */}
-            <div className="bg-[#0a0a0a] border border-[#262626] rounded-xl p-6 shadow-xl hover:border-[#404040] transition-colors">
-                <h3 className="text-sm font-bold text-white mb-6 uppercase tracking-widest mono-text flex items-center gap-2">
-                    <span className="text-[#f97316]">&gt;</span> {isHindi ? 'मुख्य फोकस क्षेत्र (Key Focus Areas)' : 'Key Focus Areas'}
+            <div className="bg-slate-800/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                <h3 className="text-lg font-semibold text-white mb-4 border-b border-white/5 pb-2">
+                    {isHindi ? 'मुख्य फोकस क्षेत्र (Key Focus Areas)' : 'Key Focus Areas'}
                 </h3>
                 <div className="h-[250px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
@@ -114,9 +116,8 @@ const SchemeAnalytics = ({ schemes, language }) => {
                                 interval={0}
                             />
                             <Tooltip
-                                cursor={{ fill: 'rgba(255,255,255,0.02)' }}
-                                contentStyle={{ backgroundColor: '#121212', border: '1px solid #262626', borderRadius: '8px', color: '#fff' }}
-                                itemStyle={{ fontFamily: 'monospace' }}
+                                cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                                contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', color: '#fff' }}
                             />
                             <Bar dataKey="value" fill={BAR_COLOR} radius={[0, 4, 4, 0]} barSize={20} />
                         </BarChart>

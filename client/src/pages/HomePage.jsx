@@ -81,103 +81,142 @@ function HomePage() {
     };
 
     return (
-        <div className="min-h-screen relative font-sans selection:bg-purple-500/30">
-            {/* Background Blobs */}
-            <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-                <div className="blob w-[500px] h-[500px] rounded-full bg-purple-600/20 top-[-10%] left-[-10%] mix-blend-screen"></div>
-                <div className="blob w-[600px] h-[600px] rounded-full bg-blue-600/20 bottom-[-10%] right-[-10%] mix-blend-screen animation-delay-2000"></div>
-                <div className="blob w-[300px] h-[300px] rounded-full bg-pink-600/20 top-[40%] left-[40%] mix-blend-screen animation-delay-4000"></div>
+        <div className="min-h-screen relative font-sans selection:bg-[#f97316]/30 z-0">
+            {/* Ambient Base Glow */}
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-20 pointer-events-none">
+                <div className="absolute w-[800px] h-[400px] rounded-full bg-[#f97316]/5 top-0 left-1/2 -translate-x-1/2 blur-[120px]"></div>
             </div>
 
-            <Header language={language} setLanguage={setLanguage} />
+            {/* Sciemo Grid Background */}
+            <div className="grid-bg"></div>
 
-            <main className="container mx-auto px-4 py-8 relative z-10 mt-20">
+            <Header language={language} setLanguage={setLanguage} t={t} />
 
-                <div className="max-w-5xl mx-auto space-y-20">
-                    <div className="text-center space-y-8 pt-10">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full border border-purple-500/30 bg-purple-900/20 backdrop-blur-sm text-xs font-medium text-purple-300 mb-4">
-                            <span className="w-2 h-2 rounded-full bg-purple-500 mr-2 animate-pulse"></span>
-                            AI-Powered Government Intelligence
+            <main className="container mx-auto px-6 py-8 relative z-10 mt-28">
+
+                <div className="max-w-6xl mx-auto space-y-32">
+                    {/* HERO SECTION */}
+                    <div className="text-center space-y-10">
+
+                        {/* Staggered Typography setup */}
+                        <div className="space-y-4">
+                            <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-display font-bold tracking-tighter leading-[1.05]">
+                                {language === 'en' ? (
+                                    <>
+                                        <span className="text-white">Find Your</span>
+                                        <span className="text-neutral-500"> Government</span> <br />
+                                        <span className="text-[#f97316]">Schemes.</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-white">अपनी</span>
+                                        <span className="text-neutral-500"> सरकारी योजनाएं</span> <br />
+                                        <span className="text-[#f97316]">खोजें.</span>
+                                    </>
+                                )}
+                            </h1>
+                            <p className="text-lg md:text-2xl text-neutral-400 max-w-2xl mx-auto leading-relaxed font-light text-center">
+                                {language === 'en'
+                                    ? "Stop guessing your eligibility. Let AI instantly match your profile to hundreds of hidden government grants, subsidies, and schemes designed for you."
+                                    : "अपनी पात्रता का अनुमान लगाना बंद करें। AI को तुरंत आपके प्रोफाइल को आपके लिए डिज़ाइन किए गए सैकड़ों छिपे हुए सरकारी अनुदानों, सब्सिडी और योजनाओं से मिलाने दें।"}
+                            </p>
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white leading-[1.1]">
-                            {language === 'en' ? (
-                                <>
-                                    Discover Government <br />
-                                    <span className="gradient-text">Schemes for You</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span className="gradient-text">अपने लिए सरकारी</span> <br />
-                                    योजनाएं खोजें
-                                </>
-                            )}
-                        </h1>
-                        <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
-                            {t.subtitle}
-                        </p>
+                        {!isSignedIn && (
+                            <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-6">
+                                <a
+                                    href="/sign-in"
+                                    className="group relative inline-flex items-center justify-center px-8 py-4 bg-[#f0f0f0] text-black font-semibold rounded-full overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)]"
+                                >
+                                    <span className="relative z-10 flex items-center">
+                                        {language === 'en' ? 'Get Started Free' : 'अभी शुरू करें'}
+                                        <svg className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </span>
+                                </a>
+                                <div className="flex items-center gap-4 text-sm text-neutral-500 font-mono tracking-wide">
+                                    <div className="flex -space-x-2">
+                                        <div className="w-8 h-8 rounded-full border border-black bg-neutral-800 flex items-center justify-center text-[10px] text-white">OS</div>
+                                        <div className="w-8 h-8 rounded-full border border-black bg-neutral-700 flex items-center justify-center text-[10px] text-white">DB</div>
+                                        <div className="w-8 h-8 rounded-full border border-black bg-[#f97316] text-black flex items-center justify-center text-xs">+</div>
+                                    </div>
+                                    <span>500+ Schemes Indexed</span>
+                                </div>
+                            </div>
+                        )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8 max-w-3xl mx-auto">
-                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
-                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">10k+</span>
-                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.citizensHelped}</span>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-0.5 bg-white/5 p-0.5 rounded-3xl pt-0 mt-20 max-w-4xl mx-auto shadow-2xl">
+                            <div className="bg-[#050505] p-10 rounded-t-3xl md:rounded-tr-none md:rounded-l-3xl flex flex-col items-center justify-center relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <span className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter mb-2">10k+</span>
+                                <span className="text-xs text-neutral-500 font-semibold uppercase tracking-widest mono-text">{t.citizensHelped}</span>
                             </div>
-                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
-                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">500+</span>
-                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.schemesIndexed}</span>
+                            <div className="bg-[#050505] p-10 flex flex-col items-center justify-center relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-b from-[#f97316]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <span className="text-4xl md:text-5xl font-display font-bold text-[#f97316] tracking-tighter mb-2">500+</span>
+                                <span className="text-xs text-neutral-500 font-semibold uppercase tracking-widest mono-text">{t.schemesIndexed}</span>
                             </div>
-                            <div className="glass-panel p-6 rounded-2xl flex flex-col items-center justify-center hover:bg-white/5 transition-all">
-                                <span className="text-3xl font-bold text-white tabular-nums tracking-tight">24/7</span>
-                                <span className="text-sm text-slate-400 font-medium uppercase tracking-wider mt-1">{t.aiSupport}</span>
+                            <div className="bg-[#050505] p-10 rounded-b-3xl md:rounded-bl-none md:rounded-r-3xl flex flex-col items-center justify-center relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <span className="text-4xl md:text-5xl font-display font-bold text-white tracking-tighter mb-2">24/7</span>
+                                <span className="text-xs text-neutral-500 font-semibold uppercase tracking-widest mono-text">{t.aiSupport}</span>
                             </div>
                         </div>
                     </div>
 
+                    <div className="border-t border-[#262626] w-full max-w-4xl mx-auto"></div>
+
                     <HowItWorks language={language} t={t} />
 
-                    {/* New Trust & Privacy Section */}
+                    <div className="border-t border-[#262626] w-full max-w-4xl mx-auto"></div>
+
                     <TrustSection language={language} t={t} />
 
-                    <div className="relative z-20">
+                    <div className="relative z-20 max-w-4xl mx-auto">
                         {isSignedIn ? (
                             <InputForm onSubmit={handleFormSubmit} isLoading={isLoading} language={language} t={t} />
                         ) : (
-                            <div className="max-w-xl mx-auto text-center p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                                <h3 className="text-2xl font-bold text-white mb-4">
-                                    {language === 'en' ? 'Sign in to Find Schemes' : 'योजनाएं खोजने के लिए साइन इन करें'}
-                                </h3>
-                                <p className="text-slate-300 mb-8">
-                                    {language === 'en'
-                                        ? 'Create an account or sign in to get personalized scheme recommendations tailored to your profile.'
-                                        : 'अपनी प्रोफाइल के अनुसार व्यक्तिगत योजना सिफारिशें प्राप्त करने के लिए खाता बनाएं या साइन इन करें।'}
-                                </p>
-                                <a
-                                    href="/sign-in"
-                                    className="inline-flex items-center px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all shadow-lg shadow-purple-500/20"
-                                >
-                                    {language === 'en' ? 'Sign In to Continue' : 'जारी रखने के लिए साइन इन करें'}
-                                    <span className="ml-2">→</span>
-                                </a>
+                            <div className="text-center p-12 bg-[#0a0a0a] border border-[#262626] relative overflow-hidden">
+                                <div className="absolute inset-0 grid-bg opacity-50"></div>
+                                <div className="relative z-10">
+                                    <h3 className="text-3xl font-display font-bold text-white mb-4 uppercase tracking-tight">
+                                        {language === 'en' ? 'Goodbye Bottlenecks. Hello Breakthroughs.' : 'योजनाएं खोजने के लिए साइन इन करें'}
+                                    </h3>
+                                    <p className="text-neutral-400 mb-10 max-w-xl mx-auto text-lg font-light">
+                                        {language === 'en'
+                                            ? 'Create an account or sign in to get hyper-personalized, data-driven scheme recommendations tailored to your unique profile.'
+                                            : 'अपनी प्रोफाइल के अनुसार व्यक्तिगत योजना सिफारिशें प्राप्त करने के लिए खाता बनाएं या साइन इन करें।'}
+                                    </p>
+                                    <a
+                                        href="/sign-in"
+                                        className="inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-neutral-200 transition-colors"
+                                    >
+                                        {language === 'en' ? 'Sign In to Continue' : 'जारी रखने के लिए साइन इन करें'}
+                                        <span className="ml-3">→</span>
+                                    </a>
+                                </div>
                             </div>
                         )}
                     </div>
 
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-lg mb-8 text-center max-w-2xl mx-auto">
-                            {error}
+                        <div className="bg-red-500/10 border border-red-500/30 text-red-500 p-4 font-mono text-sm max-w-4xl mx-auto text-center">
+                            [ERROR] {error}
                         </div>
                     )}
 
                     {showResults && (
-                        <div id="results" className="scroll-mt-24 space-y-12">
+                        <div id="results" className="scroll-mt-32 space-y-16 max-w-5xl mx-auto">
                             <SchemeAnalytics schemes={schemes} language={language} />
                             <ResultsSection schemes={schemes} generalAdvice={generalAdvice} language={language} t={t} />
 
-                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 text-center">
-                                <h2 className="text-2xl font-bold text-white mb-4">
+                            <div className="border border-[#262626] bg-[#0a0a0a] p-10 text-center relative overflow-hidden">
+                                <div className="absolute top-0 left-0 w-1 bg-[#f97316] h-full"></div>
+                                <h2 className="text-3xl font-display font-bold text-white mb-4 uppercase tracking-tight">
                                     {language === 'en' ? 'Where to Apply?' : 'आवेदन कहां करें?'}
                                 </h2>
-                                <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
+                                <p className="text-neutral-400 mb-8 max-w-2xl mx-auto font-light">
                                     {language === 'en'
                                         ? 'To apply for these schemes or verify your documents, please visit your nearest Common Service Center (CSC) or Government Office.'
                                         : 'इन योजनाओं के लिए आवेदन करने या अपने दस्तावेजों को सत्यापित करने के लिए, कृपया अपने निकटतम सामान्य सेवा केंद्र (CSC) या सरकारी कार्यालय पर जाएं।'}
@@ -187,19 +226,19 @@ function HomePage() {
                                     href="https://locator.csccloud.in/"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/20"
+                                    className="inline-flex items-center gap-3 px-8 py-4 bg-[#262626] hover:bg-[#404040] text-white font-bold uppercase tracking-widest transition-colors border border-[#404040]"
                                 >
                                     {language === 'en' ? 'Find Official CSC Center' : 'आधिकारिक CSC केंद्र खोजें'}
-                                    <span aria-hidden="true">&rarr;</span>
+                                    <span aria-hidden="true" className="text-[#f97316]">&rarr;</span>
                                 </a>
-                                <p className="text-xs text-gray-500 mt-4">
-                                    {language === 'en' ? 'Redirects to the official Government CSC Locator' : 'आधिकारिक सरकारी CSC लोकेटर पर पुनर्निर्देशित करता'}
+                                <p className="mono-text text-[10px] text-neutral-600 mt-6 tracking-widest">
+                                    {language === 'en' ? 'REDIRECTS TO OFFICIAL GOV CSC LOCATOR' : 'आधिकारिक सरकारी CSC लोकेटर पर पुनर्निर्देशित करता'}
                                 </p>
                             </div>
                         </div>
                     )}
 
-                    <div className="mt-16">
+                    <div className="mt-24 max-w-5xl mx-auto border-t border-[#262626] pt-12">
                         <Disclaimer language={language} t={t} />
                     </div>
                 </div>
