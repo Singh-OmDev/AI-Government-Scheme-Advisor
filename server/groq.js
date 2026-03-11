@@ -223,10 +223,10 @@ async function recommendSchemes(userProfile, language = 'en') {
 
     // 3. CASTE/CATEGORY FILTER (Basic Level)
     if (userProfile.category === 'General') {
-      const scstKeywords = ['sc/st', 'scheduled caste', 'scheduled tribe', 'obc', 'backward class', 'minority only', 'minorities only'];
+      const scstKeywords = ['sc/st', 'scheduled caste', 'scheduled tribe', 'obc', 'backward class', 'minority', 'minorities'];
       if (scstKeywords.some(keyword => schemeText.includes(keyword)) && 
           !schemeText.includes('general') && !schemeText.includes('all categories')) {
-        return false; // Drop SC/ST/OBC exclusive schemes for General
+        return false; // Drop SC/ST/OBC/Minority exclusive schemes for General
       }
     }
 
